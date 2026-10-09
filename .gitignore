@@ -1,0 +1,23 @@
+# Repos de código con su propio git: no forman parte de este análisis
+/GoldenBridge/
+/Asterisk-AI-Voice-Agent-FX/
+
+# Dumps de campaña de producción: datos de llamadas reales (posibles datos
+# personales) y archivos de más de 100 MB. Nunca subir.
+/files/
+
+# Clones de terceros auditados (cada uno con su .git). Se re-clonan con los
+# commits exactos de repo_analisis/IDENTIDAD.tsv.
+/repo_analisis/repos/
+/repo_analisis/*.clone.log
+
+# Entorno local
+.env
+*.env
+.venv*/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

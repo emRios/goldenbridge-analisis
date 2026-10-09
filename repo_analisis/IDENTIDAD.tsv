@@ -1,0 +1,9 @@
+repo	branch	commit	fecha_commit	licencia	submodulos
+mediasoup	v3	7d21d63d15ce233be0e7b592cc03a54327054403	2026-10-09T15:08:29+02:00	ISC License (LICENSE)	0
+freeswitch	master	f4778e7f2c98417b2b23c088f7007d6b2c1653fb	2026-10-09T16:18:38+03:00	MPL (LICENSE)	0
+jambonz-feature-server	main	85da181d7ab8302ce8e161facf5386f650d98ee4	2026-10-04T09:20:16-04:00	MIT License (LICENSE)	0
+livekit-server	master	5a897c239cde995e615047be3fd5b27ca1afdad7	2026-10-09T13:37:04+05:30	Apache License (LICENSE)	0
+livekit-sip	main	765790aeccfe905106afcd9001db1026d32743b5	2026-10-09T11:27:05-07:00	Apache License (LICENSE.txt)	0
+livekit-agents	main	786a76622c8be48a2a66d9dbc5f97dab96e8e504	2026-10-09T14:35:17-04:00	Apache License (LICENSE)	0
+pipecat	main	7d3bd9f4575bfb2a8495ea85cff4532499755c5b	2026-10-09T12:58:04-04:00	BSD 2-Clause (LICENSE)	0
+ten-framework	main	ad20a1735293d2c03af6eeb00940d45d889dd0b0	2026-10-03T11:31:35+08:00	Apache License (LICENSE)	1

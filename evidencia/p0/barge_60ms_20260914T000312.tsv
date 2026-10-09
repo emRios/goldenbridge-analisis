@@ -1,0 +1,1135 @@
+ts_utc	kind	sid	role	value_ms	extra
+00:03:35.880	applied	l0	load	102	lport=42376 marca=girasol
+00:03:37.874	applied	l1	load	116	lport=47538 marca=murcielago
+00:03:37.993	ping	l0	load	111	
+00:03:39.632	applied	l2	load	79	lport=46374 marca=alcachofa
+00:03:39.974	ping	l1	load	98	
+00:03:40.085	ping	l0	load	90	
+00:03:41.640	applied	l3	load	124	lport=48668 marca=terciopelo
+00:03:41.707	ping	l2	load	74	
+00:03:42.089	ping	l1	load	114	
+00:03:42.154	ping	l0	load	67	
+00:03:43.699	applied	l4	load	82	lport=50056 marca=ferrocarril
+00:03:43.706	ping	l3	load	64	
+00:03:43.774	ping	l2	load	65	
+00:03:44.195	ping	l1	load	104	
+00:03:44.237	ping	l0	load	81	
+00:03:44.593	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:03:45.050	conversation_text	l2	load	0	{"speaker": "user", "content": "Sí, señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:03:45.677	conversation_text	l0	load	0	{"speaker": "user", "content": "Girasul, mire, fíjese que sí me interesa, pero quisiera saber cuánto me sale al mes."}
+00:03:45.788	ping	l4	load	86	
+00:03:45.788	ping	l3	load	80	
+00:03:45.975	ping	l2	load	199	
+00:03:45.976	applied	l5	load	189	lport=56708 marca=cocodrilo
+00:03:46.302	ping	l0	load	64	
+00:03:46.315	ping	l1	load	119	
+00:03:46.804	conversation_text	l1	load	0	{"speaker": "assistant", "content": "Silencio."}
+00:03:47.214	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent."}
+00:03:48.094	ping	l3	load	304	
+00:03:48.095	ping	l4	load	305	
+00:03:48.096	ping	l2	load	119	
+00:03:48.097	ping	l5	load	118	
+00:03:48.386	ping	l0	load	82	
+00:03:48.431	ping	l1	load	115	
+00:03:49.582	applied	l7	load	76	lport=48688 marca=libelula
+00:03:50.154	ping	l3	load	57	
+00:03:50.161	ping	l4	load	64	
+00:03:50.162	ping	l2	load	65	
+00:03:50.188	ping	l5	load	90	
+00:03:50.460	ping	l0	load	70	
+00:03:50.523	ping	l1	load	91	
+00:03:51.599	applied	l8	load	76	lport=50612 marca=naufragio
+00:03:51.649	ping	l7	load	64	
+00:03:51.850	applied	l6	load	97	lport=48684 marca=paraguas
+00:03:52.224	ping	l3	load	68	
+00:03:52.231	ping	l2	load	68	
+00:03:52.232	ping	l4	load	69	
+00:03:52.280	ping	l5	load	90	
+00:03:52.527	ping	l0	load	66	
+00:03:52.620	ping	l1	load	96	
+00:03:53.706	ping	l8	load	104	
+00:03:53.708	applied	l9	load	84	lport=57326 marca=sombrilla
+00:03:53.826	ping	l7	load	175	
+00:03:53.945	ping	l6	load	93	
+00:03:54.318	ping	l3	load	92	
+00:03:54.319	ping	l2	load	86	
+00:03:54.326	ping	l4	load	93	
+00:03:54.466	ping	l5	load	181	
+00:03:54.667	ping	l0	load	138	
+00:03:54.764	ping	l1	load	143	
+00:03:55.798	conversation_text	l0	load	0	{"speaker": "assistant", "content": "No puedo generar ni simular pagos, facturas ni costos mensuales específicos para servicios, ya que soy una inteligencia artificial y no tengo acceso a su información personal, ubicación geográfica ni contratos específicos con proveedores.  Además, debo informarle que **Girasul** es una empresa de servicios de telecomunicaciones. Para obtener el costo exacto de su plan (que varía según el paquete de datos, llamadas, cobertura y promociones vigentes), debe consultar directamente con Girasul a través de su página web oficial, su aplicación móvil o contactando a su centro de atención al cliente."}
+00:03:55.980	ping	l7	load	152	
+00:03:56.243	ping	l9	load	534	
+00:03:56.382	ping	l6	load	436	
+00:03:56.437	ping	l2	load	117	
+00:03:56.438	ping	l3	load	118	
+00:03:56.438	ping	l4	load	108	
+00:03:56.539	ping	l8	load	830	
+00:03:56.692	ping	l5	load	224	
+00:03:56.807	ping	l0	load	137	
+00:03:56.917	ping	l1	load	152	
+00:03:58.109	ping	l7	load	125	
+00:03:58.313	ping	l9	load	67	
+00:03:58.474	ping	l6	load	91	
+00:03:58.508	ping	l2	load	70	
+00:03:58.510	ping	l3	load	70	
+00:03:58.513	ping	l4	load	74	
+00:03:58.598	ping	l8	load	58	
+00:03:58.782	ping	l5	load	89	
+00:03:58.873	ping	l0	load	65	
+00:03:59.005	ping	l1	load	86	
+00:04:00.174	ping	l7	load	63	
+00:04:00.376	ping	l9	load	61	
+00:04:00.564	ping	l6	load	87	
+00:04:00.578	ping	l4	load	62	
+00:04:00.579	ping	l3	load	66	
+00:04:00.580	ping	l2	load	68	
+00:04:00.659	ping	l8	load	58	
+00:04:00.876	ping	l5	load	92	
+00:04:00.950	ping	l0	load	75	
+00:04:01.093	ping	l1	load	87	
+00:04:02.242	ping	l7	load	65	
+00:04:02.440	ping	l9	load	63	
+00:04:02.653	ping	l3	load	73	
+00:04:02.654	ping	l2	load	73	
+00:04:02.655	ping	l6	load	90	
+00:04:02.655	ping	l4	load	75	
+00:04:02.724	ping	l8	load	64	
+00:04:02.962	ping	l5	load	84	
+00:04:03.018	ping	l0	load	67	
+00:04:03.191	ping	l1	load	96	
+00:04:04.308	ping	l7	load	65	
+00:04:04.515	ping	l9	load	73	
+00:04:04.718	ping	l3	load	63	
+00:04:04.719	ping	l2	load	64	
+00:04:04.724	ping	l4	load	67	
+00:04:04.747	ping	l6	load	92	
+00:04:04.791	ping	l8	load	65	
+00:04:05.053	ping	l5	load	90	
+00:04:05.084	ping	l0	load	65	
+00:04:05.280	ping	l1	load	87	
+00:04:06.381	ping	l7	load	71	
+00:04:06.578	ping	l9	load	62	
+00:04:06.783	ping	l3	load	64	
+00:04:06.784	ping	l2	load	64	
+00:04:06.789	ping	l4	load	62	
+00:04:06.835	ping	l6	load	87	
+00:04:06.854	ping	l8	load	62	
+00:04:07.152	ping	l5	load	97	
+00:04:07.153	ping	l0	load	67	
+00:04:07.370	ping	l1	load	89	
+00:04:08.442	ping	l7	load	59	
+00:04:08.643	ping	l9	load	64	
+00:04:08.858	ping	l2	load	72	
+00:04:08.858	ping	l3	load	73	
+00:04:08.859	ping	l4	load	69	
+00:04:08.924	ping	l8	load	68	
+00:04:08.935	ping	l6	load	99	
+00:04:09.220	conversation_text	l4	load	0	{"speaker": "user", "content": "Ferrocarril, mire, la verdad, sí me llama la atención.¿Qué requisitos me piden?"}
+00:04:09.226	ping	l0	load	71	
+00:04:09.246	ping	l5	load	91	
+00:04:09.463	ping	l1	load	92	
+00:04:09.783	conversation_text	l5	load	0	{"speaker": "user", "content": "Pocodrilo, no gracias, por el momento no me interesa, pero le agradezco mucho la llamada."}
+00:04:10.172	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:04:10.512	ping	l7	load	68	
+00:04:10.549	conversation_text	l7	load	0	{"speaker": "user", "content": "Y védula,¿y eso tiene algún costo adicional porque no quisiera comprometerme con algo caro?"}
+00:04:10.708	ping	l9	load	64	
+00:04:10.793	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:04:10.863	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo."}
+00:04:10.918	ping	l3	load	58	
+00:04:10.918	ping	l2	load	58	
+00:04:10.919	ping	l4	load	58	
+00:04:10.986	ping	l8	load	61	
+00:04:11.023	ping	l6	load	87	
+00:04:11.290	ping	l0	load	63	
+00:04:11.338	ping	l5	load	90	
+00:04:11.422	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:04:11.456	conversation_text	l8	load	0	{"speaker": "user", "content": "No precio."}
+00:04:11.553	ping	l1	load	89	
+00:04:12.232	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay costo adicional."}
+00:04:12.575	ping	l7	load	60	
+00:04:12.771	ping	l9	load	62	
+00:04:12.869	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained."}
+00:04:12.873	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:04:12.873	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada."}
+00:04:12.891	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:04:12.978	ping	l3	load	59	
+00:04:12.980	ping	l4	load	60	
+00:04:12.980	ping	l2	load	60	
+00:04:13.056	ping	l8	load	68	
+00:04:13.115	ping	l6	load	90	
+00:04:13.221	conversation_text	l3	load	0	{"speaker": "assistant", "content": "Terciopelo"}
+00:04:13.354	ping	l0	load	62	
+00:04:13.431	ping	l5	load	91	
+00:04:13.497	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:04:13.642	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No hay información previa para repetir. ¿En qué puedo ayudarle?"}
+00:04:13.652	ping	l1	load	97	
+00:04:14.645	ping	l7	load	68	
+00:04:15.045	ping	l9	load	273	
+00:04:15.053	ping	l3	load	72	
+00:04:15.058	ping	l4	load	76	
+00:04:15.059	ping	l2	load	76	
+00:04:15.188	ping	l8	load	126	
+00:04:15.210	ping	l6	load	94	
+00:04:15.420	ping	l0	load	64	
+00:04:15.541	ping	l5	load	109	
+00:04:15.733	conversation_text	l6	load	0	{"speaker": "assistant", "content": "Silent test agent protocol active. No output."}
+00:04:15.744	ping	l1	load	90	
+00:04:16.000	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No tengo información sobre un ferrocarril específico ni sus requisitos en este momento. ¿Podría proporcionarme más detalles, como la ubicación o el nombre del ferrocarril, para que pueda buscar la información que necesita?"}
+00:04:16.122	conversation_text	l8	load	0	{"speaker": "user", "content": "Permítame un momento, por favor."}
+00:04:16.555	conversation_text	l3	load	0	{"speaker": "user", "content": "Había hablado con un compañero suyo la semana pasada sobre eso."}
+00:04:16.710	ping	l7	load	64	
+00:04:16.944	conversation_text	l9	load	0	{"speaker": "user", "content": "Ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:04:17.124	ping	l9	load	77	
+00:04:17.125	ping	l4	load	66	
+00:04:17.127	ping	l3	load	69	
+00:04:17.142	ping	l2	load	79	
+00:04:17.185	conversation_text	l5	load	0	{"speaker": "user", "content": "Gracias, por el momento no me interesa, pero le agradezco mucho la llamada."}
+00:04:17.255	ping	l8	load	65	
+00:04:17.304	ping	l6	load	92	
+00:04:17.491	ping	l0	load	70	
+00:04:17.543	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained."}
+00:04:17.637	ping	l5	load	94	
+00:04:17.800	conversation_text	l7	load	0	{"speaker": "user", "content": "y eso tiene algún costo adicional porque no quisiera comprometerme con algo caro."}
+00:04:17.836	ping	l1	load	91	
+00:04:18.180	conversation_text	l1	load	0	{"speaker": "user", "content": "Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:04:18.347	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:04:18.776	ping	l7	load	65	
+00:04:19.172	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:04:19.189	ping	l9	load	63	
+00:04:19.189	ping	l4	load	63	
+00:04:19.190	ping	l3	load	61	
+00:04:19.200	ping	l2	load	57	
+00:04:19.320	ping	l8	load	64	
+00:04:19.325	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada."}
+00:04:19.389	ping	l6	load	84	
+00:04:19.558	ping	l0	load	64	
+00:04:19.563	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:04:19.628	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:04:19.731	ping	l5	load	93	
+00:04:19.933	ping	l1	load	96	
+00:04:20.166	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes o usuarios. Cada sesión conmigo es independiente.  ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:04:20.339	conversation_text	l6	load	0	{"speaker": "user", "content": "Él habla, dígame,¿qué le puedo ayudar el día de hoy?"}
+00:04:20.367	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:04:20.839	ping	l7	load	62	
+00:04:21.253	ping	l3	load	62	
+00:04:21.254	ping	l9	load	63	
+00:04:21.254	ping	l4	load	64	
+00:04:21.265	ping	l2	load	64	
+00:04:21.382	ping	l8	load	60	
+00:04:21.478	ping	l6	load	87	
+00:04:21.623	ping	l0	load	65	
+00:04:21.820	ping	l5	load	88	
+00:04:22.026	ping	l1	load	91	
+00:04:22.702	conversation_text	l8	load	0	{"speaker": "user", "content": "Voy a buscar un momento, por favor. Voy a la piscina para anotar."}
+00:04:22.899	ping	l7	load	58	
+00:04:23.067	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:04:23.315	ping	l3	load	60	
+00:04:23.316	ping	l9	load	60	
+00:04:23.322	ping	l4	load	66	
+00:04:23.330	ping	l2	load	64	
+00:04:23.450	ping	l8	load	65	
+00:04:23.565	ping	l6	load	86	
+00:04:23.691	ping	l0	load	66	
+00:04:23.911	ping	l5	load	89	
+00:04:24.111	ping	l1	load	83	
+00:04:24.973	ping	l7	load	73	
+00:04:25.382	ping	l3	load	65	
+00:04:25.383	ping	l9	load	66	
+00:04:25.384	ping	l4	load	61	
+00:04:25.391	ping	l2	load	59	
+00:04:25.518	ping	l8	load	65	
+00:04:25.653	ping	l6	load	87	
+00:04:25.780	ping	l0	load	88	
+00:04:25.977	conversation_text	l0	load	0	{"speaker": "user", "content": "Girasul  ⁇  mire, fíjese que sí me interesa pero quisiera saber cuánto me sale al mes."}
+00:04:26.002	ping	l5	load	89	
+00:04:26.201	ping	l1	load	89	
+00:04:26.466	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:04:27.035	ping	l7	load	61	
+00:04:27.454	ping	l3	load	70	
+00:04:27.454	ping	l9	load	71	
+00:04:27.455	ping	l2	load	63	
+00:04:27.455	ping	l4	load	70	
+00:04:27.578	ping	l8	load	59	
+00:04:27.752	ping	l6	load	97	
+00:04:27.842	ping	l0	load	61	
+00:04:28.101	ping	l5	load	96	
+00:04:28.297	ping	l1	load	95	
+00:04:29.101	ping	l7	load	64	
+00:04:29.519	ping	l3	load	64	
+00:04:29.520	ping	l2	load	63	
+00:04:29.520	ping	l4	load	63	
+00:04:29.521	ping	l9	load	65	
+00:04:29.639	ping	l8	load	59	
+00:04:29.848	ping	l6	load	94	
+00:04:29.909	ping	l0	load	66	
+00:04:30.120	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:04:30.188	ping	l5	load	86	
+00:04:30.388	ping	l1	load	89	
+00:04:31.165	ping	l7	load	62	
+00:04:31.582	ping	l3	load	61	
+00:04:31.585	ping	l9	load	63	
+00:04:31.586	ping	l4	load	65	
+00:04:31.587	ping	l2	load	66	
+00:04:31.703	ping	l8	load	62	
+00:04:31.934	ping	l6	load	84	
+00:04:31.974	ping	l0	load	62	
+00:04:32.282	ping	l5	load	93	
+00:04:32.303	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:04:32.476	ping	l1	load	86	
+00:04:33.229	ping	l7	load	63	
+00:04:33.645	ping	l3	load	60	
+00:04:33.645	ping	l9	load	59	
+00:04:33.650	ping	l4	load	63	
+00:04:33.651	ping	l2	load	63	
+00:04:33.765	ping	l8	load	60	
+00:04:33.935	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:04:34.037	ping	l0	load	62	
+00:04:34.038	ping	l6	load	101	
+00:04:34.148	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas."}
+00:04:34.196	conversation_text	l5	load	0	{"speaker": "user", "content": "Gracias mucho la llamada."}
+00:04:34.369	ping	l5	load	86	
+00:04:34.429	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento por favor, voy a buscar un lapicero para anotar los datos."}
+00:04:34.579	ping	l1	load	102	
+00:04:34.923	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula,¿y eso tiene algún costo adicional porque no quisiera comprometerme con algo caro?"}
+00:04:35.047	conversation_text	l0	load	0	{"speaker": "assistant", "content": "No puedo proporcionar el precio exacto ni generar una factura específica para su caso, ya que soy una inteligencia artificial y no tengo acceso a su ubicación, historial de consumo ni planes personalizados con Girasul.  Los costos varían según el paquete de datos, minutos y la promoción vigente en su zona. Para obtener la cifra exacta de lo que le saldría al mes, debe consultar directamente con Girasul a través de su página web oficial, su aplicación de cliente o contactando a su centro de atención al cliente."}
+00:04:35.183	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas."}
+00:04:35.226	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información o no la entendí bien?"}
+00:04:35.297	ping	l7	load	66	
+00:04:35.423	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí, señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:04:35.725	ping	l3	load	79	
+00:04:35.727	ping	l4	load	75	
+00:04:35.728	ping	l9	load	81	
+00:04:35.729	ping	l2	load	76	
+00:04:35.826	ping	l8	load	60	
+00:04:36.101	ping	l0	load	62	
+00:04:36.130	ping	l6	load	92	
+00:04:36.215	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:04:36.405	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:04:36.459	ping	l5	load	87	
+00:04:36.646	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar"}
+00:04:36.671	ping	l1	load	90	
+00:04:36.679	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:04:37.365	ping	l7	load	67	
+00:04:37.379	conversation_text	l6	load	0	{"speaker": "user", "content": "El día del día de hoy."}
+00:04:37.434	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:04:37.785	ping	l3	load	59	
+00:04:37.793	ping	l9	load	63	
+00:04:37.794	ping	l2	load	62	
+00:04:37.794	ping	l4	load	65	
+00:04:37.896	ping	l8	load	69	
+00:04:38.174	ping	l0	load	72	
+00:04:38.205	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:04:38.221	ping	l6	load	89	
+00:04:38.562	ping	l5	load	101	
+00:04:38.773	ping	l1	load	99	
+00:04:39.289	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo una fecha específica, pero estoy aquí para ayudarte en este momento."}
+00:04:39.454	ping	l7	load	87	
+00:04:39.845	ping	l3	load	59	
+00:04:39.853	ping	l9	load	59	
+00:04:39.860	ping	l4	load	65	
+00:04:39.861	ping	l2	load	66	
+00:04:39.969	ping	l8	load	71	
+00:04:40.249	ping	l0	load	74	
+00:04:40.334	ping	l6	load	112	
+00:04:40.655	ping	l5	load	89	
+00:04:40.872	ping	l1	load	98	
+00:04:41.530	ping	l7	load	75	
+00:04:41.905	ping	l3	load	59	
+00:04:41.917	ping	l9	load	62	
+00:04:41.924	ping	l4	load	63	
+00:04:41.925	ping	l2	load	63	
+00:04:42.031	ping	l8	load	61	
+00:04:42.313	ping	l0	load	63	
+00:04:42.423	ping	l6	load	87	
+00:04:42.434	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo, fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso."}
+00:04:42.747	ping	l5	load	90	
+00:04:42.961	ping	l1	load	86	
+00:04:43.597	ping	l7	load	66	
+00:04:43.970	ping	l3	load	63	
+00:04:43.978	ping	l9	load	60	
+00:04:43.993	ping	l2	load	67	
+00:04:43.993	ping	l4	load	67	
+00:04:44.093	ping	l8	load	59	
+00:04:44.389	ping	l0	load	75	
+00:04:44.518	ping	l6	load	94	
+00:04:44.837	ping	l5	load	88	
+00:04:45.055	ping	l1	load	93	
+00:04:45.658	ping	l7	load	59	
+00:04:45.711	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente.  ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:04:46.039	ping	l3	load	67	
+00:04:46.042	ping	l9	load	61	
+00:04:46.054	ping	l2	load	60	
+00:04:46.055	ping	l4	load	60	
+00:04:46.159	ping	l8	load	65	
+00:04:46.315	conversation_text	l6	load	0	{"speaker": "user", "content": "Sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:04:46.452	ping	l0	load	63	
+00:04:46.608	ping	l6	load	88	
+00:04:46.928	ping	l5	load	90	
+00:04:47.081	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:04:47.145	ping	l1	load	89	
+00:04:47.294	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:04:47.725	ping	l7	load	66	
+00:04:48.100	ping	l3	load	60	
+00:04:48.104	ping	l9	load	61	
+00:04:48.117	ping	l4	load	60	
+00:04:48.117	ping	l2	load	60	
+00:04:48.223	ping	l8	load	63	
+00:04:48.514	ping	l0	load	59	
+00:04:48.695	ping	l6	load	86	
+00:04:49.014	ping	l5	load	85	
+00:04:49.236	ping	l1	load	89	
+00:04:49.255	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:04:49.788	ping	l7	load	61	
+00:04:50.169	ping	l3	load	67	
+00:04:50.170	ping	l9	load	65	
+00:04:50.185	ping	l2	load	66	
+00:04:50.185	ping	l4	load	66	
+00:04:50.285	ping	l8	load	60	
+00:04:50.304	conversation_text	l4	load	0	{"speaker": "user", "content": "Ferrocarril, mire, la verdad, sí me llama la atención.¿Qué requisitos me piden?"}
+00:04:50.575	ping	l0	load	60	
+00:04:50.780	ping	l6	load	84	
+00:04:50.943	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:04:51.103	ping	l5	load	87	
+00:04:51.240	conversation_text	l5	load	0	{"speaker": "user", "content": "Mucho la llamada."}
+00:04:51.325	ping	l1	load	86	
+00:04:51.378	conversation_text	l8	load	0	{"speaker": "user", "content": "Naufragio, permítame un momento, por favor, voy a buscar un lapicero para anotar los datos."}
+00:04:51.752	conversation_text	l7	load	0	{"speaker": "user", "content": "Y védula,¿y eso tiene algún costo adicional porque no quisiera comprometerme con algo caro?"}
+00:04:51.860	ping	l7	load	71	
+00:04:52.134	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información o no la entendí bien?"}
+00:04:52.230	ping	l3	load	60	
+00:04:52.231	ping	l9	load	58	
+00:04:52.250	ping	l2	load	64	
+00:04:52.250	ping	l4	load	64	
+00:04:52.298	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:04:52.357	ping	l8	load	71	
+00:04:52.639	ping	l0	load	63	
+00:04:52.868	ping	l6	load	86	
+00:04:53.191	ping	l5	load	87	
+00:04:53.416	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:04:53.416	ping	l1	load	90	
+00:04:53.642	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar"}
+00:04:53.923	ping	l7	load	62	
+00:04:54.210	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:04:54.283	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:04:54.312	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:04:54.334	ping	l3	load	102	
+00:04:54.335	ping	l9	load	103	
+00:04:54.336	ping	l2	load	84	
+00:04:54.337	ping	l4	load	84	
+00:04:54.434	ping	l8	load	76	
+00:04:54.703	ping	l0	load	62	
+00:04:54.962	ping	l6	load	93	
+00:04:55.098	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:04:55.290	ping	l5	load	96	
+00:04:55.505	ping	l1	load	87	
+00:04:55.994	ping	l7	load	70	
+00:04:56.403	ping	l3	load	67	
+00:04:56.404	ping	l9	load	67	
+00:04:56.404	ping	l2	load	67	
+00:04:56.404	ping	l4	load	66	
+00:04:56.496	ping	l8	load	61	
+00:04:56.602	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No puedo ver a través de la pantalla ni identificar a las personas en tiempo real. Para saber los requisitos, necesito saber a qué ferrocarril específico te refieres (por ejemplo, **Ferrocarril de Madrid**, **Ferrocarril de Aranjuez**, **Ferrocarril de la Gran Vía**, etc.) o si te refieres a un puesto de trabajo o una oferta de empleo concreta. Por favor, indícame el nombre o el contexto para poder ayudarte."}
+00:04:56.782	ping	l0	load	77	
+00:04:57.078	ping	l6	load	113	
+00:04:57.385	ping	l5	load	94	
+00:04:57.597	ping	l1	load	91	
+00:04:58.068	ping	l7	load	73	
+00:04:58.475	ping	l3	load	71	
+00:04:58.475	ping	l9	load	70	
+00:04:58.476	ping	l2	load	70	
+00:04:58.476	ping	l4	load	70	
+00:04:58.556	ping	l8	load	60	
+00:04:58.850	ping	l0	load	66	
+00:04:59.168	ping	l6	load	89	
+00:04:59.472	ping	l5	load	86	
+00:04:59.694	ping	l1	load	96	
+00:05:00.099	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas."}
+00:05:00.138	ping	l7	load	69	
+00:05:00.424	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo, fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso."}
+00:05:00.583	ping	l3	load	80	
+00:05:00.584	ping	l9	load	80	
+00:05:00.585	ping	l4	load	79	
+00:05:00.585	ping	l2	load	80	
+00:05:00.626	ping	l8	load	68	
+00:05:00.914	ping	l0	load	62	
+00:05:01.260	ping	l6	load	90	
+00:05:01.566	ping	l5	load	91	
+00:05:01.625	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas."}
+00:05:01.788	ping	l1	load	93	
+00:05:02.202	ping	l7	load	61	
+00:05:02.655	ping	l3	load	70	
+00:05:02.656	ping	l9	load	71	
+00:05:02.658	ping	l2	load	70	
+00:05:02.658	ping	l4	load	70	
+00:05:02.689	ping	l8	load	60	
+00:05:02.981	ping	l0	load	65	
+00:05:03.357	conversation_text	l6	load	0	{"speaker": "user", "content": "El día de hoy."}
+00:05:03.367	ping	l6	load	85	
+00:05:03.666	ping	l5	load	92	
+00:05:03.879	ping	l1	load	90	
+00:05:04.092	conversation_text	l5	load	0	{"speaker": "user", "content": "Pocodrilo."}
+00:05:04.280	ping	l7	load	77	
+00:05:04.720	ping	l3	load	64	
+00:05:04.721	ping	l9	load	63	
+00:05:04.730	ping	l4	load	70	
+00:05:04.731	ping	l2	load	71	
+00:05:04.759	ping	l8	load	69	
+00:05:05.047	ping	l0	load	65	
+00:05:05.230	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo una fecha específica, pero estoy aquí para ayudarte en este momento."}
+00:05:05.457	ping	l6	load	88	
+00:05:05.761	ping	l5	load	94	
+00:05:05.970	ping	l1	load	90	
+00:05:06.273	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:06.347	ping	l7	load	65	
+00:05:06.791	ping	l3	load	69	
+00:05:06.793	ping	l9	load	70	
+00:05:06.798	ping	l2	load	66	
+00:05:06.799	ping	l4	load	67	
+00:05:06.823	ping	l8	load	63	
+00:05:07.112	ping	l0	load	63	
+00:05:07.551	ping	l6	load	93	
+00:05:07.851	ping	l5	load	89	
+00:05:07.940	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría. Ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:05:08.064	ping	l1	load	93	
+00:05:08.203	conversation_text	l5	load	0	{"speaker": "user", "content": "Mucho la llamada."}
+00:05:08.338	conversation_text	l8	load	0	{"speaker": "user", "content": "Naufragio, permítame un momento, por favor. Voy a buscar un lapicero para anotar los datos."}
+00:05:08.417	ping	l7	load	69	
+00:05:08.549	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente.  ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:05:08.790	conversation_text	l7	load	0	{"speaker": "user", "content": "Y védula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:05:08.858	ping	l3	load	61	
+00:05:08.859	ping	l9	load	61	
+00:05:08.860	ping	l2	load	60	
+00:05:08.861	ping	l4	load	60	
+00:05:08.897	ping	l8	load	72	
+00:05:09.154	conversation_text	l1	load	0	{"speaker": "user", "content": "Ursélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:05:09.172	ping	l0	load	58	
+00:05:09.325	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí, señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:05:09.642	ping	l6	load	90	
+00:05:09.959	ping	l5	load	107	
+00:05:10.155	ping	l1	load	89	
+00:05:10.374	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:10.485	ping	l7	load	66	
+00:05:10.625	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:05:11.008	ping	l3	load	148	
+00:05:11.009	ping	l9	load	149	
+00:05:11.010	ping	l2	load	149	
+00:05:11.011	ping	l4	load	148	
+00:05:11.011	ping	l8	load	114	
+00:05:11.079	conversation_text	l0	load	0	{"speaker": "user", "content": "Girazul, mire, fíjese que sí me interesa, pero quisiera saber cuánto me sale al mes."}
+00:05:11.188	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:05:11.305	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:05:11.322	ping	l0	load	149	
+00:05:11.343	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:05:11.766	ping	l6	load	122	
+00:05:12.090	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:05:12.091	ping	l5	load	131	
+00:05:12.265	ping	l1	load	109	
+00:05:12.310	conversation_text	l6	load	0	{"speaker": "user", "content": "Aguas, sí, con él habla. Dígame,¿en qué le puedo ayudar el día de hoy?"}
+00:05:12.573	ping	l7	load	86	
+00:05:13.094	ping	l3	load	84	
+00:05:13.094	ping	l9	load	83	
+00:05:13.096	ping	l2	load	84	
+00:05:13.096	ping	l4	load	84	
+00:05:13.097	ping	l8	load	84	
+00:05:13.404	ping	l0	load	68	
+00:05:13.799	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:05:13.866	ping	l6	load	98	
+00:05:14.182	ping	l5	load	88	
+00:05:14.351	ping	l1	load	85	
+00:05:14.636	ping	l7	load	62	
+00:05:15.156	ping	l3	load	61	
+00:05:15.156	ping	l9	load	61	
+00:05:15.164	ping	l2	load	66	
+00:05:15.165	ping	l8	load	67	
+00:05:15.166	ping	l4	load	67	
+00:05:15.469	ping	l0	load	64	
+00:05:15.960	ping	l6	load	92	
+00:05:16.269	ping	l5	load	87	
+00:05:16.452	ping	l1	load	99	
+00:05:16.705	ping	l7	load	68	
+00:05:17.291	ping	l3	load	134	
+00:05:17.300	ping	l9	load	142	
+00:05:17.307	ping	l2	load	134	
+00:05:17.310	ping	l8	load	143	
+00:05:17.318	ping	l4	load	143	
+00:05:17.709	ping	l0	load	237	
+00:05:18.051	ping	l6	load	90	
+00:05:18.384	ping	l5	load	113	
+00:05:18.573	ping	l1	load	98	
+00:05:18.767	ping	l7	load	60	
+00:05:19.380	ping	l3	load	81	
+00:05:19.383	ping	l9	load	75	
+00:05:19.385	ping	l2	load	72	
+00:05:19.385	ping	l8	load	65	
+00:05:19.388	ping	l4	load	64	
+00:05:19.560	conversation_text	l0	load	0	{"speaker": "assistant", "content": "No puedo proporcionarle el precio exacto ni generar una factura, ya que soy una inteligencia artificial y no tengo acceso a su ubicación, historial de consumo ni planes personalizados con Girasul.  Los costos varían según el paquete de datos, minutos y la promoción vigente en su zona. Para obtener la cifra exacta de lo que le saldría al mes, debe consultar directamente con Girasul a través de su página web oficial, su aplicación móvil o contactando a su centro de atención al cliente."}
+00:05:19.778	ping	l0	load	67	
+00:05:20.148	ping	l6	load	95	
+00:05:20.470	ping	l5	load	85	
+00:05:20.663	ping	l1	load	88	
+00:05:20.830	ping	l7	load	62	
+00:05:21.448	ping	l3	load	64	
+00:05:21.453	ping	l9	load	68	
+00:05:21.454	ping	l2	load	68	
+00:05:21.454	ping	l8	load	67	
+00:05:21.454	ping	l4	load	63	
+00:05:21.859	ping	l0	load	80	
+00:05:22.240	ping	l6	load	91	
+00:05:22.562	ping	l5	load	91	
+00:05:22.653	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:05:22.751	ping	l1	load	86	
+00:05:22.906	ping	l7	load	74	
+00:05:23.517	ping	l3	load	68	
+00:05:23.522	ping	l8	load	67	
+00:05:23.523	ping	l9	load	68	
+00:05:23.524	ping	l4	load	69	
+00:05:23.525	ping	l2	load	69	
+00:05:23.937	ping	l0	load	76	
+00:05:24.276	conversation_text	l4	load	0	{"speaker": "user", "content": "Ferrocarril, mire, la verdad, sí me llama la atención,¿qué requisito me piden?"}
+00:05:24.336	ping	l6	load	94	
+00:05:24.699	ping	l5	load	135	
+00:05:24.832	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:24.837	ping	l1	load	84	
+00:05:24.918	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:05:24.966	ping	l7	load	58	
+00:05:25.320	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor, voy a buscar un lapicero para anotar los datos."}
+00:05:25.576	ping	l3	load	58	
+00:05:25.588	ping	l9	load	63	
+00:05:25.588	ping	l8	load	64	
+00:05:25.589	ping	l4	load	63	
+00:05:25.590	ping	l2	load	64	
+00:05:25.768	conversation_text	l7	load	0	{"speaker": "user", "content": "Y védula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:05:26.002	ping	l0	load	63	
+00:05:26.141	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:05:26.310	conversation_text	l2	load	0	{"speaker": "user", "content": "Cachofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:05:26.368	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo  ⁇ fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso ⁇."}
+00:05:26.425	ping	l6	load	87	
+00:05:26.801	ping	l5	load	100	
+00:05:26.924	ping	l1	load	85	
+00:05:27.030	ping	l7	load	63	
+00:05:27.609	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar"}
+00:05:27.644	ping	l3	load	66	
+00:05:27.650	ping	l9	load	61	
+00:05:27.656	ping	l2	load	66	
+00:05:27.657	ping	l4	load	66	
+00:05:27.658	ping	l8	load	66	
+00:05:28.083	ping	l0	load	79	
+00:05:28.323	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:05:28.324	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:05:28.511	ping	l6	load	85	
+00:05:28.889	ping	l5	load	86	
+00:05:29.028	ping	l1	load	102	
+00:05:29.051	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:05:29.100	ping	l7	load	68	
+00:05:29.319	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:05:29.360	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No puedo ver a través de la cámara ni identificar a las personas en tiempo real.  Para darte la información correcta, necesito saber a qué **ferrocarril específico** te refieres (por ejemplo, Renfe, Metro de una ciudad, una empresa de construcción, o un puesto de trabajo concreto).  Por favor, escribe el nombre de la empresa o el tipo de puesto para que pueda buscar los requisitos oficiales."}
+00:05:29.571	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:05:29.708	ping	l3	load	62	
+00:05:29.712	ping	l9	load	62	
+00:05:29.726	ping	l2	load	68	
+00:05:29.727	ping	l8	load	67	
+00:05:29.728	ping	l4	load	70	
+00:05:30.159	ping	l0	load	75	
+00:05:30.610	ping	l6	load	98	
+00:05:30.811	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:05:30.985	ping	l5	load	94	
+00:05:31.121	ping	l1	load	92	
+00:05:31.165	ping	l7	load	64	
+00:05:31.778	ping	l3	load	68	
+00:05:31.778	ping	l9	load	64	
+00:05:31.791	ping	l2	load	61	
+00:05:31.792	ping	l4	load	61	
+00:05:31.792	ping	l8	load	63	
+00:05:32.236	ping	l0	load	76	
+00:05:32.705	ping	l6	load	94	
+00:05:33.076	ping	l5	load	86	
+00:05:33.213	ping	l1	load	90	
+00:05:33.231	ping	l7	load	65	
+00:05:33.846	ping	l9	load	67	
+00:05:33.847	ping	l3	load	67	
+00:05:33.857	ping	l2	load	65	
+00:05:33.857	ping	l8	load	63	
+00:05:33.858	ping	l4	load	63	
+00:05:34.309	ping	l0	load	71	
+00:05:34.797	ping	l6	load	91	
+00:05:35.174	ping	l5	load	97	
+00:05:35.322	ping	l1	load	107	
+00:05:35.615	ping	l7	load	382	
+00:05:35.917	ping	l9	load	69	
+00:05:35.917	ping	l3	load	69	
+00:05:35.921	ping	l2	load	63	
+00:05:35.921	ping	l8	load	63	
+00:05:35.922	ping	l4	load	61	
+00:05:36.388	ping	l0	load	78	
+00:05:36.890	ping	l6	load	91	
+00:05:37.262	ping	l5	load	87	
+00:05:37.413	ping	l1	load	89	
+00:05:37.676	ping	l7	load	60	
+00:05:37.988	ping	l3	load	70	
+00:05:37.989	ping	l9	load	71	
+00:05:38.014	ping	l2	load	92	
+00:05:38.015	ping	l8	load	92	
+00:05:38.015	ping	l4	load	91	
+00:05:38.078	conversation_text	l5	load	0	{"speaker": "user", "content": "Poco brilo."}
+00:05:38.448	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente. ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:05:38.480	ping	l0	load	89	
+00:05:38.976	ping	l6	load	85	
+00:05:39.354	ping	l5	load	90	
+00:05:39.503	ping	l1	load	89	
+00:05:39.742	ping	l7	load	63	
+00:05:40.049	ping	l3	load	60	
+00:05:40.085	ping	l9	load	72	
+00:05:40.086	ping	l2	load	69	
+00:05:40.086	ping	l4	load	69	
+00:05:40.087	ping	l8	load	69	
+00:05:40.271	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:40.544	ping	l0	load	62	
+00:05:41.081	ping	l6	load	90	
+00:05:41.446	ping	l5	load	90	
+00:05:41.592	ping	l1	load	87	
+00:05:41.801	ping	l7	load	58	
+00:05:41.948	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:05:42.108	ping	l3	load	57	
+00:05:42.158	ping	l9	load	72	
+00:05:42.160	ping	l2	load	72	
+00:05:42.161	ping	l8	load	73	
+00:05:42.162	ping	l4	load	73	
+00:05:42.215	conversation_text	l5	load	0	{"speaker": "user", "content": "Mucho la llamada."}
+00:05:42.302	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor. Voy a buscar un lapicero para anotar los datos."}
+00:05:42.610	ping	l0	load	65	
+00:05:42.758	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:05:43.124	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:05:43.172	ping	l6	load	90	
+00:05:43.302	conversation_text	l2	load	0	{"speaker": "user", "content": "Cachofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:05:43.537	ping	l5	load	90	
+00:05:43.688	ping	l1	load	94	
+00:05:43.869	ping	l7	load	67	
+00:05:44.190	ping	l3	load	80	
+00:05:44.219	ping	l9	load	59	
+00:05:44.225	ping	l2	load	63	
+00:05:44.228	ping	l8	load	66	
+00:05:44.229	ping	l4	load	65	
+00:05:44.391	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:44.649	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:05:44.675	ping	l0	load	64	
+00:05:45.259	ping	l6	load	85	
+00:05:45.280	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:05:45.314	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:05:45.625	ping	l5	load	87	
+00:05:45.789	ping	l1	load	100	
+00:05:45.931	ping	l7	load	60	
+00:05:46.040	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:05:46.261	ping	l3	load	70	
+00:05:46.284	ping	l9	load	64	
+00:05:46.291	ping	l2	load	65	
+00:05:46.291	ping	l8	load	61	
+00:05:46.292	ping	l4	load	62	
+00:05:46.293	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:05:46.562	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:05:46.751	ping	l0	load	75	
+00:05:47.343	ping	l6	load	84	
+00:05:47.716	ping	l5	load	89	
+00:05:47.802	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:05:47.893	ping	l1	load	88	
+00:05:47.999	ping	l7	load	67	
+00:05:48.323	ping	l3	load	61	
+00:05:48.351	ping	l9	load	65	
+00:05:48.353	ping	l8	load	61	
+00:05:48.354	ping	l2	load	61	
+00:05:48.355	ping	l4	load	61	
+00:05:48.653	conversation_text	l4	load	0	{"speaker": "user", "content": "¿Verdad? Sí me llama la atención.¿Qué requisito me piden?"}
+00:05:48.813	ping	l0	load	59	
+00:05:49.431	ping	l6	load	87	
+00:05:49.803	ping	l5	load	86	
+00:05:49.983	ping	l1	load	89	
+00:05:50.081	ping	l7	load	80	
+00:05:50.388	ping	l3	load	62	
+00:05:50.418	ping	l9	load	66	
+00:05:50.420	ping	l2	load	63	
+00:05:50.421	ping	l8	load	66	
+00:05:50.422	ping	l4	load	64	
+00:05:50.882	ping	l0	load	68	
+00:05:51.519	ping	l6	load	87	
+00:05:51.896	ping	l5	load	92	
+00:05:52.071	ping	l1	load	87	
+00:05:52.145	ping	l7	load	62	
+00:05:52.384	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo, fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso."}
+00:05:52.458	ping	l3	load	69	
+00:05:52.491	ping	l8	load	69	
+00:05:52.492	ping	l4	load	69	
+00:05:52.492	ping	l9	load	70	
+00:05:52.493	ping	l2	load	70	
+00:05:52.949	ping	l0	load	65	
+00:05:53.035	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No puedo ver a través de la cámara ni identificar personas. Para saber los requisitos, necesito que me digas el nombre específico del ferrocarril o la empresa a la que te refieres (por ejemplo: Renfe, Metro de Madrid, una constructora, etc.) o el puesto de trabajo que te interesa."}
+00:05:53.619	ping	l6	load	97	
+00:05:53.993	ping	l5	load	95	
+00:05:54.163	ping	l1	load	90	
+00:05:54.209	ping	l7	load	63	
+00:05:54.520	ping	l3	load	60	
+00:05:54.571	ping	l9	load	78	
+00:05:54.573	ping	l2	load	78	
+00:05:54.574	ping	l8	load	80	
+00:05:54.574	ping	l4	load	80	
+00:05:55.012	ping	l0	load	62	
+00:05:55.057	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:05:55.715	ping	l6	load	95	
+00:05:56.084	ping	l5	load	90	
+00:05:56.106	conversation_text	l0	load	0	{"speaker": "user", "content": "Girasol, mire, fíjese que sí me interesa, pero quisiera saber cuánto me sale al mes."}
+00:05:56.258	ping	l1	load	95	
+00:05:56.279	ping	l7	load	69	
+00:05:56.585	ping	l3	load	63	
+00:05:56.630	ping	l9	load	57	
+00:05:56.639	ping	l4	load	63	
+00:05:56.640	ping	l8	load	63	
+00:05:56.640	ping	l2	load	65	
+00:05:57.078	ping	l0	load	65	
+00:05:57.238	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:05:57.806	ping	l6	load	89	
+00:05:58.185	ping	l5	load	99	
+00:05:58.344	ping	l7	load	64	
+00:05:58.348	ping	l1	load	87	
+00:05:58.656	ping	l3	load	70	
+00:05:58.691	ping	l9	load	60	
+00:05:58.716	ping	l2	load	75	
+00:05:58.717	ping	l8	load	75	
+00:05:58.717	ping	l4	load	76	
+00:05:58.930	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:05:59.152	ping	l0	load	73	
+00:05:59.195	conversation_text	l5	load	0	{"speaker": "user", "content": "Ajá, gracias mucho la llamada."}
+00:05:59.340	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor. Voy a buscar un lapicero para anotar los datos."}
+00:05:59.807	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:05:59.897	ping	l6	load	90	
+00:06:00.161	conversation_text	l1	load	0	{"speaker": "user", "content": "Urshiélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:06:00.286	ping	l5	load	100	
+00:06:00.335	conversation_text	l2	load	0	{"speaker": "user", "content": "Cachofa, sí señorita, ahorita no puedo atenderle,¿me puedo llamar más tarde, por favor?"}
+00:06:00.410	ping	l7	load	64	
+00:06:00.440	ping	l1	load	90	
+00:06:00.564	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo acceso a conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente. ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:06:00.718	ping	l3	load	60	
+00:06:00.769	ping	l9	load	76	
+00:06:00.786	ping	l8	load	68	
+00:06:00.787	ping	l4	load	68	
+00:06:00.788	ping	l2	load	70	
+00:06:01.217	ping	l0	load	64	
+00:06:01.379	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:01.627	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar"}
+00:06:01.984	ping	l6	load	82	
+00:06:02.339	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional"}
+00:06:02.350	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:06:02.380	ping	l5	load	92	
+00:06:02.488	ping	l7	load	77	
+00:06:02.535	ping	l1	load	94	
+00:06:02.792	ping	l3	load	72	
+00:06:02.834	ping	l9	load	64	
+00:06:02.852	ping	l2	load	62	
+00:06:02.852	ping	l8	load	64	
+00:06:02.853	ping	l4	load	64	
+00:06:03.066	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:06:03.285	ping	l0	load	66	
+00:06:03.344	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿en qué le puedo ayudar el día de hoy?"}
+00:06:04.076	ping	l6	load	89	
+00:06:04.398	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir ¿En qué puedo ayudarle?"}
+00:06:04.476	ping	l5	load	95	
+00:06:04.567	ping	l7	load	77	
+00:06:04.624	ping	l1	load	87	
+00:06:04.840	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:06:04.874	ping	l3	load	81	
+00:06:04.905	ping	l9	load	70	
+00:06:04.933	ping	l8	load	79	
+00:06:04.934	ping	l2	load	80	
+00:06:04.936	ping	l4	load	79	
+00:06:05.358	ping	l0	load	72	
+00:06:06.163	ping	l6	load	86	
+00:06:06.569	ping	l5	load	92	
+00:06:06.592	conversation_text	l4	load	0	{"speaker": "user", "content": "¿Verdad? Sí me llama la atención.¿Qué requisito me piden?"}
+00:06:06.631	ping	l7	load	62	
+00:06:06.711	ping	l1	load	86	
+00:06:06.796	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo, fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso."}
+00:06:06.956	ping	l3	load	65	
+00:06:06.987	ping	l9	load	82	
+00:06:06.998	ping	l2	load	61	
+00:06:06.999	ping	l8	load	64	
+00:06:06.999	ping	l4	load	62	
+00:06:07.426	ping	l0	load	66	
+00:06:08.252	ping	l6	load	88	
+00:06:08.662	ping	l5	load	92	
+00:06:08.698	ping	l7	load	64	
+00:06:08.808	ping	l1	load	96	
+00:06:09.030	ping	l3	load	73	
+00:06:09.054	ping	l9	load	65	
+00:06:09.066	ping	l2	load	66	
+00:06:09.067	ping	l4	load	66	
+00:06:09.067	ping	l8	load	67	
+00:06:09.491	ping	l0	load	63	
+00:06:10.358	ping	l6	load	104	
+00:06:10.756	ping	l5	load	92	
+00:06:10.760	ping	l7	load	61	
+00:06:10.837	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No puedo ver a través de la cámara ni identificar personas. Para darte los requisitos correctos, necesito que me digas el nombre específico del ferrocarril o la empresa (por ejemplo: Renfe, Metro de Madrid, etc.) o el tipo de puesto de trabajo que te interesa."}
+00:06:10.908	ping	l1	load	99	
+00:06:11.134	ping	l9	load	78	
+00:06:11.135	ping	l3	load	102	
+00:06:11.136	ping	l2	load	69	
+00:06:11.136	ping	l8	load	68	
+00:06:11.137	ping	l4	load	68	
+00:06:11.565	ping	l0	load	74	
+00:06:12.122	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:06:12.448	ping	l6	load	88	
+00:06:12.822	ping	l7	load	61	
+00:06:12.857	ping	l5	load	99	
+00:06:13.001	ping	l1	load	91	
+00:06:13.198	ping	l3	load	62	
+00:06:13.198	ping	l9	load	62	
+00:06:13.211	ping	l2	load	73	
+00:06:13.211	ping	l8	load	73	
+00:06:13.212	ping	l4	load	75	
+00:06:13.634	ping	l0	load	67	
+00:06:14.283	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:14.538	ping	l6	load	89	
+00:06:14.891	ping	l7	load	68	
+00:06:14.955	ping	l5	load	96	
+00:06:15.106	ping	l1	load	104	
+00:06:15.278	ping	l3	load	80	
+00:06:15.279	ping	l9	load	80	
+00:06:15.280	ping	l2	load	68	
+00:06:15.281	ping	l8	load	68	
+00:06:15.281	ping	l4	load	66	
+00:06:15.699	ping	l0	load	63	
+00:06:15.926	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:06:16.209	conversation_text	l5	load	0	{"speaker": "user", "content": "Gracias por mucho la llamada."}
+00:06:16.382	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor. Voy a buscar un lapicero para anotar los datos."}
+00:06:16.652	ping	l6	load	113	
+00:06:16.831	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:06:16.951	ping	l7	load	58	
+00:06:17.098	ping	l5	load	141	
+00:06:17.224	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:06:17.225	ping	l1	load	117	
+00:06:17.328	conversation_text	l2	load	0	{"speaker": "user", "content": "Echofa, sí, señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:06:17.353	ping	l4	load	70	
+00:06:17.353	ping	l3	load	73	
+00:06:17.354	ping	l9	load	73	
+00:06:17.354	ping	l2	load	73	
+00:06:17.355	ping	l8	load	72	
+00:06:17.780	ping	l0	load	80	
+00:06:18.431	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:18.638	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:06:18.745	ping	l6	load	91	
+00:06:18.938	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente. ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:06:19.018	ping	l7	load	65	
+00:06:19.203	ping	l5	load	103	
+00:06:19.333	ping	l1	load	107	
+00:06:19.424	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:06:19.426	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional"}
+00:06:19.427	ping	l3	load	73	
+00:06:19.430	ping	l2	load	75	
+00:06:19.431	ping	l9	load	76	
+00:06:19.432	ping	l8	load	76	
+00:06:19.432	ping	l4	load	77	
+00:06:19.850	ping	l0	load	68	
+00:06:20.282	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:06:20.312	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:06:20.835	ping	l6	load	87	
+00:06:20.852	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:06:21.093	ping	l7	load	73	
+00:06:21.305	ping	l5	load	99	
+00:06:21.427	ping	l1	load	92	
+00:06:21.492	ping	l3	load	64	
+00:06:21.497	ping	l9	load	64	
+00:06:21.498	ping	l2	load	65	
+00:06:21.498	ping	l4	load	65	
+00:06:21.498	ping	l8	load	65	
+00:06:21.807	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:06:21.927	ping	l0	load	63	
+00:06:22.166	conversation_text	l0	load	0	{"speaker": "assistant", "content": "No puedo proporcionarle el precio exacto ni generar una factura, ya que soy una inteligencia artificial y no tengo acceso a su ubicación, historial de consumo ni planes personalizados con Girasol. Los costos varían según el paquete de datos, minutos y la promoción vigente en su zona. Para obtener la cifra exacta de lo que le saldría al mes, debe consultar directamente con Girasul a través de su página web oficial, su aplicación móvil o contactando a su centro de atención al cliente."}
+00:06:22.926	ping	l6	load	90	
+00:06:23.153	ping	l7	load	59	
+00:06:23.397	ping	l5	load	91	
+00:06:23.531	ping	l1	load	102	
+00:06:23.575	ping	l3	load	80	
+00:06:23.577	ping	l9	load	77	
+00:06:23.578	ping	l2	load	79	
+00:06:23.578	ping	l8	load	78	
+00:06:23.579	ping	l4	load	79	
+00:06:23.997	ping	l0	load	69	
+00:06:25.018	ping	l6	load	91	
+00:06:25.225	ping	l7	load	71	
+00:06:25.494	ping	l5	load	96	
+00:06:25.617	ping	l1	load	85	
+00:06:25.633	ping	l3	load	56	
+00:06:25.641	ping	l9	load	63	
+00:06:25.642	ping	l8	load	61	
+00:06:25.642	ping	l4	load	61	
+00:06:25.642	ping	l2	load	63	
+00:06:26.070	ping	l0	load	72	
+00:06:27.124	ping	l6	load	105	
+00:06:27.294	ping	l7	load	67	
+00:06:27.585	ping	l5	load	89	
+00:06:27.696	ping	l3	load	62	
+00:06:27.714	ping	l9	load	71	
+00:06:27.721	ping	l2	load	70	
+00:06:27.724	ping	l8	load	71	
+00:06:27.725	ping	l4	load	71	
+00:06:27.726	ping	l1	load	107	
+00:06:28.154	ping	l0	load	82	
+00:06:29.088	conversation_text	l5	load	0	{"speaker": "user", "content": "Pocodrilo."}
+00:06:29.214	ping	l6	load	88	
+00:06:29.365	ping	l7	load	70	
+00:06:29.676	ping	l5	load	89	
+00:06:29.782	ping	l3	load	74	
+00:06:29.787	ping	l2	load	62	
+00:06:29.787	ping	l9	load	64	
+00:06:29.788	ping	l8	load	62	
+00:06:29.789	ping	l4	load	62	
+00:06:29.820	ping	l1	load	93	
+00:06:30.219	ping	l0	load	64	
+00:06:31.280	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:31.326	ping	l6	load	110	
+00:06:31.431	ping	l7	load	65	
+00:06:31.748	conversation_text	l3	load	0	{"speaker": "user", "content": "Terciopelo, fíjese que ya había hablado con un compañero suyo la semana pasada sobre eso."}
+00:06:31.768	ping	l5	load	90	
+00:06:31.856	ping	l3	load	72	
+00:06:31.857	ping	l2	load	69	
+00:06:31.858	ping	l9	load	69	
+00:06:31.858	ping	l8	load	69	
+00:06:31.859	ping	l4	load	67	
+00:06:31.915	ping	l1	load	93	
+00:06:32.245	conversation_text	l4	load	0	{"speaker": "user", "content": "Ferrocarril, mire, la verdad, sí me llama la atención,¿qué requisitos me piden?"}
+00:06:32.296	ping	l0	load	76	
+00:06:32.948	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría. Ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:06:33.180	conversation_text	l5	load	0	{"speaker": "user", "content": "Gracias mucho la llamada."}
+00:06:33.372	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor. Voy a buscar un epicero para anotar los datos."}
+00:06:33.428	ping	l6	load	101	
+00:06:33.500	ping	l7	load	68	
+00:06:33.794	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula, y eso tiene algún costo adicional, porque no quisiera comprometerme con algo caro."}
+00:06:33.854	ping	l5	load	84	
+00:06:33.922	ping	l9	load	64	
+00:06:33.923	ping	l3	load	65	
+00:06:33.924	ping	l2	load	66	
+00:06:33.925	ping	l8	load	64	
+00:06:33.926	ping	l4	load	64	
+00:06:34.011	ping	l1	load	95	
+00:06:34.192	conversation_text	l1	load	0	{"speaker": "user", "content": "Murciélago, buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:06:34.339	conversation_text	l2	load	0	{"speaker": "user", "content": "Cachofa, sí señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:06:34.367	ping	l0	load	70	
+00:06:35.382	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:35.512	ping	l6	load	83	
+00:06:35.567	ping	l7	load	65	
+00:06:35.646	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar."}
+00:06:35.943	ping	l5	load	88	
+00:06:35.987	ping	l3	load	62	
+00:06:35.988	ping	l8	load	61	
+00:06:35.988	ping	l9	load	63	
+00:06:35.989	ping	l2	load	63	
+00:06:35.995	ping	l4	load	61	
+00:06:36.099	ping	l1	load	87	
+00:06:36.341	conversation_text	l7	load	0	{"speaker": "assistant", "content": "No, no hay ningún costo adicional."}
+00:06:36.364	conversation_text	l2	load	0	{"speaker": "assistant", "content": "Silent"}
+00:06:36.434	ping	l0	load	65	
+00:06:37.086	conversation_text	l8	load	0	{"speaker": "assistant", "content": "Silence maintained"}
+00:06:37.312	conversation_text	l6	load	0	{"speaker": "user", "content": "Paraguas, sí, con él habla. Dígame,¿qué le puedo ayudar el día de hoy?"}
+00:06:37.600	ping	l6	load	86	
+00:06:37.633	ping	l7	load	65	
+00:06:37.644	conversation_text	l1	load	0	{"speaker": "assistant", "content": "No tengo información previa que repetir. ¿En qué puedo ayudarle?"}
+00:06:38.053	ping	l5	load	109	
+00:06:38.054	ping	l8	load	65	
+00:06:38.054	ping	l3	load	65	
+00:06:38.055	ping	l9	load	66	
+00:06:38.061	ping	l2	load	65	
+00:06:38.061	ping	l4	load	64	
+00:06:38.195	ping	l1	load	93	
+00:06:38.503	ping	l0	load	67	
+00:06:38.800	conversation_text	l6	load	0	{"speaker": "assistant", "content": "No tengo un paraguas"}
+00:06:38.930	conversation_text	l4	load	0	{"speaker": "assistant", "content": "No puedo ver a través de la cámara ni identificar personas. Para saber los requisitos exactos, necesito que me especifiques a qué ferrocarril o empresa te refieres (por ejemplo: Renfe, Metro de una ciudad, una constructora específica) o cuál es el puesto de trabajo que te interesa."}
+00:06:39.689	ping	l6	load	86	
+00:06:39.700	ping	l7	load	65	
+00:06:40.130	ping	l3	load	74	
+00:06:40.131	ping	l9	load	74	
+00:06:40.131	ping	l2	load	68	
+00:06:40.132	ping	l8	load	77	
+00:06:40.132	ping	l4	load	69	
+00:06:40.156	ping	l5	load	102	
+00:06:40.309	ping	l1	load	112	
+00:06:40.566	ping	l0	load	62	
+00:06:41.174	conversation_text	l0	load	0	{"speaker": "user", "content": "Girazul, mire, fíjese que sí me interesa, pero quisiera saber cuánto me sale al mes."}
+00:06:41.774	ping	l7	load	72	
+00:06:41.779	ping	l6	load	88	
+00:06:42.194	ping	l3	load	62	
+00:06:42.197	ping	l9	load	65	
+00:06:42.198	ping	l8	load	65	
+00:06:42.199	ping	l4	load	64	
+00:06:42.199	ping	l2	load	66	
+00:06:42.250	ping	l5	load	93	
+00:06:42.438	ping	l1	load	128	
+00:06:42.637	ping	l0	load	69	
+00:06:43.821	conversation_text	l3	load	0	{"speaker": "assistant", "content": "No tengo memoria de conversaciones pasadas ni puedo recordar interacciones con otros agentes. Cada sesión conmigo es independiente. ¿Podrías decirme de qué estábamos hablando la semana pasada para que pueda ayudarte?"}
+00:06:43.842	ping	l7	load	67	
+00:06:43.875	ping	l6	load	94	
+00:06:44.278	ping	l3	load	82	
+00:06:44.279	ping	l9	load	79	
+00:06:44.279	ping	l2	load	78	
+00:06:44.282	ping	l8	load	83	
+00:06:44.282	ping	l4	load	82	
+00:06:44.341	ping	l5	load	89	
+00:06:44.527	ping	l1	load	88	
+00:06:44.702	ping	l0	load	64	
+00:06:45.908	ping	l7	load	65	
+00:06:45.974	ping	l6	load	98	
+00:06:46.126	conversation_text	l5	load	0	{"speaker": "user", "content": "Cucodrilo."}
+00:06:46.339	ping	l3	load	59	
+00:06:46.345	ping	l9	load	65	
+00:06:46.346	ping	l8	load	64	
+00:06:46.347	ping	l4	load	63	
+00:06:46.347	ping	l2	load	64	
+00:06:46.431	ping	l5	load	89	
+00:06:46.631	ping	l1	load	103	
+00:06:46.768	ping	l0	load	63	
+00:06:47.972	ping	l7	load	63	
+00:06:48.063	ping	l6	load	87	
+00:06:48.308	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:48.402	ping	l3	load	61	
+00:06:48.408	ping	l9	load	62	
+00:06:48.409	ping	l2	load	61	
+00:06:48.410	ping	l8	load	63	
+00:06:48.414	ping	l4	load	63	
+00:06:48.524	ping	l5	load	92	
+00:06:48.716	ping	l1	load	84	
+00:06:48.829	ping	l0	load	59	
+00:06:49.906	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+00:06:50.050	ping	l7	load	76	
+00:06:50.155	ping	l6	load	90	
+00:06:50.217	conversation_text	l5	load	0	{"speaker": "user", "content": "Mucho la llamada."}
+00:06:50.354	conversation_text	l8	load	0	{"speaker": "user", "content": "Nafragio, permítame un momento, por favor. Voy a buscar un lapicero para anotar los datos."}
+00:06:50.467	ping	l3	load	64	
+00:06:50.474	ping	l9	load	65	
+00:06:50.474	ping	l2	load	64	
+00:06:50.479	ping	l8	load	64	
+00:06:50.479	ping	l4	load	63	
+00:06:50.613	ping	l5	load	87	
+00:06:50.810	ping	l1	load	92	
+00:06:50.898	ping	l0	load	68	
+00:06:50.916	conversation_text	l4	load	0	{"speaker": "user", "content": "¿Verdad? Sí me llama la atención.¿Qué requisitos me piden?"}
+00:06:50.928	conversation_text	l7	load	0	{"speaker": "user", "content": "Y vélula,¿y eso tiene algún costo adicional? Porque no quisiera comprometerme con algo caro."}
+00:06:51.128	conversation_text	l1	load	0	{"speaker": "user", "content": "Buenas tardes. Disculpe,¿me puede repetir la información? No la entendí bien."}
+00:06:51.341	conversation_text	l2	load	0	{"speaker": "user", "content": "Cachofa, sí, señorita, ahorita no puedo atenderle,¿me podría llamar más tarde, por favor?"}
+00:06:52.176	ping	l7	load	125	
+00:06:52.242	ping	l6	load	85	
+00:06:52.412	conversation_text	l5	load	0	{"speaker": "assistant", "content": "De nada"}
+00:06:52.529	ping	l3	load	61	
+00:06:52.535	ping	l9	load	60	
+00:06:52.535	ping	l2	load	60	
+00:06:52.540	ping	l8	load	59	
+00:06:52.541	ping	l4	load	59	
+00:06:52.600	conversation_text	l9	load	0	{"speaker": "assistant", "content": "No puedo hablar"}
+00:06:52.701	ping	l5	load	86	
+00:06:52.899	ping	l1	load	87	
+00:06:52.961	ping	l0	load	61	
+00:06:53.195	end_ok	l0	load	0	in_bytes=1211078|speak=5|audio_done=4|text=9|frames=9864|packets=3288|packet_ms=60|marca=girasol|interrumpe=si|cortes=6
+00:06:53.204	end_ok	l3	load	0	in_bytes=735200|speak=8|audio_done=8|text=16|frames=9576|packets=3192|packet_ms=60|marca=terciopelo|interrumpe=si|cortes=8
+00:06:53.206	end_ok	l8	load	0	in_bytes=358011|speak=12|audio_done=11|text=23|frames=9078|packets=3026|packet_ms=60|marca=naufragio|interrumpe=no
+00:06:53.210	end_ok	l9	load	0	in_bytes=257840|speak=11|audio_done=11|text=22|frames=8973|packets=2991|packet_ms=60|marca=sombrilla|interrumpe=si|cortes=1
+00:06:53.212	end_ok	l6	load	0	in_bytes=259920|speak=13|audio_done=13|text=26|frames=9066|packets=3022|packet_ms=60|marca=paraguas|interrumpe=si|cortes=2
+00:06:53.213	end_ok	l1	load	0	in_bytes=362320|speak=12|audio_done=11|text=23|frames=9765|packets=3255|packet_ms=60|marca=murcielago|interrumpe=no
+00:06:53.214	end_ok	l5	load	0	in_bytes=348080|speak=19|audio_done=19|text=38|frames=9360|packets=3120|packet_ms=60|marca=cocodrilo|interrumpe=no
+00:06:53.214	end_ok	l4	load	0	in_bytes=1018043|speak=7|audio_done=6|text=13|frames=9474|packets=3158|packet_ms=60|marca=ferrocarril|interrumpe=no
+00:06:53.215	end_ok	l7	load	0	in_bytes=231243|speak=11|audio_done=10|text=21|frames=9180|packets=3060|packet_ms=60|marca=libelula|interrumpe=no
+00:06:53.216	end_ok	l2	load	0	in_bytes=203718|speak=12|audio_done=11|text=23|frames=9678|packets=3226|packet_ms=60|marca=alcachofa|interrumpe=no

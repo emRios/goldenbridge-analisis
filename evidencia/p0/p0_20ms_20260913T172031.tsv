@@ -1,0 +1,11 @@
+ts_utc	kind	sid	role	value_ms	extra
+17:25:24.880	error	l0	load	0	gaierror: [Errno -3] Temporary failure in name resolution
+17:25:27.457	error	l2	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:27.468	error	l1	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:27.471	error	l3	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:27.472	error	l5	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:27.474	error	l4	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:34.851	error	l6	load	0	gaierror: [Errno -3] Temporary failure in name resolution
+17:25:37.199	error	l7	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:37.346	error	l9	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401
+17:25:37.346	error	l8	load	0	InvalidStatus: server rejected WebSocket connection: HTTP 401

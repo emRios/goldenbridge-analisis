@@ -1,0 +1,82 @@
+ts_utc	kind	sid	role	value_ms	extra
+17:30:12.419	error	l0	load	0	gaierror: [Errno -3] Temporary failure in name resolution
+17:30:24.413	error	l6	load	0	gaierror: [Errno -3] Temporary failure in name resolution
+17:30:32.352	error	l1	load	0	TimeoutError: timed out during opening handshake
+17:30:34.348	error	l2	load	0	TimeoutError: timed out during opening handshake
+17:30:36.363	error	l3	load	0	TimeoutError: timed out during opening handshake
+17:30:38.360	error	l4	load	0	TimeoutError: timed out during opening handshake
+17:30:40.384	error	l5	load	0	TimeoutError: timed out during opening handshake
+17:30:44.351	error	l7	load	0	TimeoutError: timed out during opening handshake
+17:30:46.350	error	l8	load	0	TimeoutError: timed out during opening handshake
+17:30:47.442	applied	l9	load	138	lport=44376 marca=sombrilla
+17:30:49.577	ping	l9	load	132	
+17:30:50.732	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría."}
+17:30:51.695	ping	l9	load	115	
+17:30:53.813	ping	l9	load	115	
+17:30:54.487	conversation_text	l9	load	0	{"speaker": "assistant", "content": "*Silence.*"}
+17:30:55.929	ping	l9	load	114	
+17:30:58.059	ping	l9	load	129	
+17:31:00.177	ping	l9	load	116	
+17:31:00.132	ping	l9	load	122	
+17:31:02.242	ping	l9	load	108	
+17:31:04.365	ping	l9	load	120	
+17:31:06.486	ping	l9	load	120	
+17:31:08.609	ping	l9	load	121	
+17:31:08.713	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:31:10.072	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:31:10.729	ping	l9	load	117	
+17:31:12.856	ping	l9	load	124	
+17:31:14.984	ping	l9	load	127	
+17:31:17.103	ping	l9	load	116	
+17:31:19.231	ping	l9	load	125	
+17:31:21.369	ping	l9	load	135	
+17:31:23.557	ping	l9	load	185	
+17:31:25.679	ping	l9	load	120	
+17:31:25.725	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:31:27.790	ping	l9	load	108	
+17:31:28.263	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:31:29.916	ping	l9	load	123	
+17:31:29.869	ping	l9	load	118	
+17:31:31.999	ping	l9	load	128	
+17:31:34.113	ping	l9	load	113	
+17:31:36.237	ping	l9	load	120	
+17:31:38.357	ping	l9	load	117	
+17:31:40.476	ping	l9	load	116	
+17:31:40.534	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:31:42.592	ping	l9	load	114	
+17:31:43.262	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:31:44.718	ping	l9	load	125	
+17:31:46.836	ping	l9	load	116	
+17:31:48.967	ping	l9	load	127	
+17:31:51.085	ping	l9	load	116	
+17:31:53.203	ping	l9	load	116	
+17:31:55.320	ping	l9	load	114	
+17:31:57.439	ping	l9	load	117	
+17:31:57.567	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:31:59.554	ping	l9	load	113	
+17:32:00.083	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:31:59.717	ping	l9	load	115	
+17:32:01.825	ping	l9	load	107	
+17:32:03.944	ping	l9	load	117	
+17:32:06.053	ping	l9	load	108	
+17:32:08.168	ping	l9	load	113	
+17:32:10.288	ping	l9	load	119	
+17:32:12.406	ping	l9	load	114	
+17:32:12.621	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:32:14.523	ping	l9	load	116	
+17:32:15.335	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:32:16.658	ping	l9	load	133	
+17:32:18.785	ping	l9	load	125	
+17:32:20.904	ping	l9	load	114	
+17:32:23.038	ping	l9	load	131	
+17:32:25.158	ping	l9	load	118	
+17:32:27.279	ping	l9	load	119	
+17:32:29.392	ping	l9	load	112	
+17:32:29.575	conversation_text	l9	load	0	{"speaker": "user", "content": "Sombría, ya entiendo, entonces lo que me está ofreciendo es diferente a lo que ya tengo."}
+17:32:31.503	ping	l9	load	110	
+17:32:30.205	conversation_text	l9	load	0	{"speaker": "assistant", "content": "Silence"}
+17:32:31.605	ping	l9	load	105	
+17:32:33.725	ping	l9	load	117	
+17:32:35.844	ping	l9	load	116	
+17:32:37.961	ping	l9	load	113	
+17:32:40.066	end_ok	l9	load	0	in_bytes=144880|speak=7|audio_done=7|text=14|frames=6047|packets=6047|packet_ms=20|marca=sombrilla|interrumpe=no
