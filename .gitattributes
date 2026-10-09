@@ -1,0 +1,29 @@
+# Este repo se edita en Windows (laptop) y se ejecuta en Linux (servidor).
+# Todo texto se guarda con LF en el repo y en ambos árboles de trabajo:
+# un run.sh con CRLF falla en Linux con "$'\r': command not found".
+* text=auto eol=lf
+
+*.sh     text eol=lf
+*.py     text eol=lf
+*.cpp    text eol=lf
+*.hpp    text eol=lf
+*.h      text eol=lf
+*.cmake  text eol=lf
+CMakeLists.txt text eol=lf
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.json   text eol=lf
+*.toml   text eol=lf
+*.md     text eol=lf
+*.tsv    text eol=lf
+*.csv    text eol=lf
+
+# Binarios: nunca convertir ni diffear
+*.pdf    binary
+*.npz    binary
+*.npy    binary
+*.onnx   binary
+*.wav    binary
+*.ulaw   binary
+*.gz     binary
+*.png    binary

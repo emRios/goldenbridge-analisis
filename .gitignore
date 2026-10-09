@@ -21,3 +21,6 @@ __pycache__/
 .idea/
 Thumbs.db
 desktop.ini
+
+# Resultados voluminosos de experimentos: se quedan en la máquina que los generó
+/experimentos/*/resultados/crudo/

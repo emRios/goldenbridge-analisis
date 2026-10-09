@@ -36,9 +36,12 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
 
 1. **La arquitectura objetivo está decidida.** No reabrir: afinidad de CPU
    (A1/A2), `nice`, `SCHED_FIFO/RR`, EEVDF custom slice (refutado: kernel 6.8,
-   `setattr`→0 pero `getattr`→`runtime=0`), ni el split MediaWorker/Control
-   *dentro* de GB. `cgroups` sólo como protección operativa en EC2, nunca como
-   solución arquitectónica.
+   `setattr`→0 pero `getattr`→`runtime=0`). `cgroups` sólo como protección
+   operativa en EC2, nunca como solución arquitectónica.
+   **Excepción vigente (2026-09-28 y 2026-10-09):** el split Media–Conversación
+   y el motor Media (incluido un MediaWorker nativo) **quedaron reabiertos por
+   encargo explícito** y tienen estrategia aprobada — ver "ESTADO ACTUAL".
+   Ese trabajo sí se hace; lo demás de esta regla sigue cerrado.
 2. **Etiquetar toda afirmación**: `[MEDIDO]` · `[CÓDIGO]` · `[INFERIDO]` ·
    `[ABIERTO]`. No inventar capacidades, costes, número de máquinas ni
    porcentajes de CPU sin decir qué medición los demostraría.
@@ -49,6 +52,46 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
 4. **Nunca validar una capacidad por el código de retorno de un syscall.** Leer
    de vuelta el estado efectivo.
 5. **No recomendar un refactor grande antes de agotar medición y PoC baratos.**
+
+---
+
+## ESTADO ACTUAL — leer antes de proponer nada
+
+**Estrategia aprobada:** `doctos/ESTRATEGIA_MEDIAWORKER_20261009.md`. Dos carriles:
+
+- **M · medir.** M0 corregir el gate de arranque de la imagen · M1 línea base
+  del monolito a 60 ms · M2 PoC Python con un loop por llamada.
+- **C · construir (sans-I/O, independiente de la estructura de hilos).**
+  C0 códec+soxr · C1 Silero+VAD · C2 log-mel+SmartTurn · C3 gates/watchdog ·
+  C4 dueño por llamada (escenarios A, S1; B condicionado) · C5-C8 red real,
+  contrato y Conversación, sólo tras el veredicto del laboratorio.
+
+**Paso en curso:** M0. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+
+**Hechos nuevos que no están más abajo** (verificados; detalle en
+`doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md`):
+
+- `[CÓDIGO]` **`docker/arranque.sh` L43-44: el gate de referencia no bloquea.**
+  `if ! pytest … | tail -20` en `sh` sin `pipefail` evalúa el status de `tail`;
+  la imagen Modal sirve tráfico aunque la referencia VNNI falle. `deploy.sh`
+  (`.143`) sí bloquea. Es M0.
+- `[DOCUMENTACIÓN]` ORT 1.24.4: `InferenceSession::Run` es seguro entre hilos.
+  El comentario de SMART L224 está equivocado; el lock de smart-turn sólo
+  cubre `run`, las features van fuera.
+- `[CÓDIGO]` ai-engine `d059295` descarta todos los JSON de GB (exige
+  `call_id`), no tiene flush de reproducción y no reconecta si cae el WS a GB.
+- `[INFERENCIA]` Ninguno de los precedentes auditados (FreeSWITCH, LiveKit)
+  corre IA por trama dentro del trabajador dueño: la propuesta es una
+  hipótesis a falsar, no una solución copiada.
+
+**Índice de decisiones, en orden:**
+`doctos/AUDITORIA_REFACTOR_websocket_server_api_08932a6.md` →
+`doctos/DICTAMEN_MULTIPROCESO_POR_TAREA_MODAL_20260928.md` →
+`doctos/DICTAMEN_FRONTERA_MEDIA_CONVERSACION_20260928.md` →
+`repo_analisis/` (8 motores de media) →
+`doctos/DICTAMEN_CODEX_MEDIAWORKER_CPP_20261009.md` →
+`doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md` →
+`doctos/ESTRATEGIA_MEDIAWORKER_20261009.md`.
 
 ---
 
@@ -109,7 +152,7 @@ Techos históricos: 3.11 con GIL **40-45** · 3.14t **51** · +afinidad **58**.
 > orquestación de STT/LLM/TTS no cuesta nada; **el cuello es el camino de audio
 > a 50 fps**.
 
-### `[CÓDIGO]` — rama `api` @ `08932a6` (el repo local ya está en esa rama)
+### `[CÓDIGO]` — rama `api` @ `08932a6` (en la laptop el checkout está en otra rama con trabajo local: leer `api` con `git show api:<ruta>`)
 
 - `frame_offload: true` → todo el DSP por-trama corre en el pool `vad`
   (4 workers); el loop sólo paga submit + resume.
@@ -148,8 +191,42 @@ Techos históricos: 3.11 con GIL **40-45** · 3.14t **51** · +afinidad **58**.
 | `doctos/CONCURRENCIA_100_METRICAS_Y_EXPERIMENTOS.md` | experimentos E1-E8 de `.143` + índice de evidencia cruda. **Su §6 usa el dato atípico — ver el consolidado** |
 | `prompts/deep-research-report*.md` | investigación previa; su opción #1 (EEVDF) está refutada |
 | `prompts/Prompt maestro — …` | encargo original del análisis |
-| `GoldenBridge/` | repo, rama **`api`** |
-| `files/*.gz` | dumps de campaña (6 campañas) |
+| `doctos/ESTRATEGIA_MEDIAWORKER_20261009.md` | **estrategia vigente** |
+| `repo_analisis/` | auditoría de 8 motores de media; `repos/` no se versiona |
+| `mediaworker/` | código del laboratorio: `core/` (C0-C3), `lab/` (C4), `parity/` |
+| `experimentos/` | un directorio por corrida, con `run.sh` y manifiesto; plantilla en `_plantilla/` |
+| `parches/` | cambios propuestos para GoldenBridge, aplicables en su propio repo |
+| `GoldenBridge/` | repo aparte, rama **`api`** — **no se versiona aquí** |
+| `Asterisk-AI-Voice-Agent-FX/` | ai-engine, repo aparte — **no se versiona aquí** |
+| `files/*.gz` | dumps de campaña (6 campañas) — **datos de producción, nunca al repo** |
+
+---
+
+## FLUJO DE TRABAJO LAPTOP ⇄ SERVIDOR
+
+Este directorio es el repo `github.com/emRios/goldenbridge-analisis`. Se trabaja
+en dos lugares:
+
+- **Laptop (Windows):** documentos, análisis, código del laboratorio, scripts.
+  Pruebas que no necesitan modelos ni tráfico. Push.
+- **Servidor (Linux):** pull y ejecución de `experimentos/*/run.sh` con modelos,
+  imagen `goldenbridge:314t` y carga. Los resúmenes de resultados vuelven al
+  repo; lo crudo queda en `resultados/crudo/`, que no se versiona.
+
+Reglas:
+
+- **El contexto compartido es este repo**, no la memoria de ningún asistente.
+  Toda decisión, hallazgo o cambio de estado se escribe aquí (ESTADO ACTUAL o
+  un documento en `doctos/`). Una sesión en el servidor sólo ve lo que está
+  commiteado.
+- `main` tiene lo consolidado; una rama corta por paso (`paso/m0-gate`,
+  `paso/m1-linea-base`), que se integra al cerrar el paso.
+- Finales de línea: LF siempre (`.gitattributes`). Nunca commitear un `.sh`
+  con CRLF.
+- Ningún experimento se ejecuta sin manifiesto (lo genera `run.sh`) y ningún
+  número entra en un documento como `[MEDIDO]` sin la ruta de su manifiesto.
+- Los cambios a GoldenBridge o ai-engine no se hacen aquí: van a `parches/` o a
+  una rama de su propio repo.
 
 ---
 
