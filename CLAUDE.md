@@ -74,7 +74,11 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
 - `[CÓDIGO]` **`docker/arranque.sh` L43-44: el gate de referencia no bloquea.**
   `if ! pytest … | tail -20` en `sh` sin `pipefail` evalúa el status de `tail`;
   la imagen Modal sirve tráfico aunque la referencia VNNI falle. `deploy.sh`
-  (`.143`) sí bloquea. Es M0.
+  (`.143`) sí bloquea. Es M0. Segundo defecto del mismo gate: sin
+  `vad_probs.npz` pytest **salta** las 6 pruebas de Silero (`pytestmark
+  skipif`) y sale con 0; el chequeo de artefactos no lo buscaba. Parche y
+  prueba negativa en `parches/2026-10-09_goldenbridge_gate-arranque/` y
+  `experimentos/2026-10-09_m0-gate/` (rama `paso/m0-gate`).
 - `[DOCUMENTACIÓN]` ORT 1.24.4: `InferenceSession::Run` es seguro entre hilos.
   El comentario de SMART L224 está equivocado; el lock de smart-turn sólo
   cubre `run`, las features van fuera.
