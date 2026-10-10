@@ -44,6 +44,22 @@ Endpoint en producción (dato del usuario, 2026-10-09): `https://shejo--golden-b
 
 Para cerrarlo, en orden de costo: (1) leer el código de despliegue de la app `golden-bridge` y buscar `.entrypoint(`, `@modal.enter` y llamadas a `arranque` o `pytest`; (2) en los logs de un arranque en frío (panel de Modal o `modal app logs golden-bridge`, con token de cuenta), buscar `[arranque] verificando la referencia congelada`. Sondear el endpoint no sirve: el health no dice si el gate corrió y puede despertar un contenedor.
 
+## Estrategia en Modal (2026-10-10)
+
+Experiencia del usuario `[ABIERTO: no está en la documentación pública]`: si un contenedor no logra arrancar, Modal lo descarta y entrega otro; Modal no garantiza el tipo de CPU todo el tiempo; sí se puede fijar el tipo de hardware de los contenedores. Falta saber **con qué mecanismo** se fija.
+
+`[DOCUMENTACIÓN]` Modal reparte las funciones entre varios tipos de worker con banderas de CPU distintas ([memory snapshots](https://modal.com/docs/guide/memory-snapshots)). Se puede fijar la región con `region=` (recargo 1,15× amplia, 1,75× estrecha: [region selection](https://modal.com/docs/guide/region-selection)). No hay documentación pública para elegir el modelo de CPU ([resources](https://modal.com/docs/guide/resources)).
+
+Dos capas:
+
+1. **Fijar el hardware** — protección principal: ninguna réplica cae en CPU sin `avx512_vnni`.
+2. **Este gate** — red de seguridad: si una réplica cae en CPU incorrecta, o cambia la imagen, el modelo o ORT, el contenedor se niega a arrancar y Modal entrega otro. Cada rechazo alarga un arranque en frío que ya es de 26-33 s.
+
+M0b, en una app de prueba aparte de `golden-bridge`:
+1. el arranque del parche como entrypoint corre el gate y luego el runtime de Modal;
+2. ~50 arranques en frío con el hardware fijado: todos con `avx512_vnni` y el gate en verde;
+3. con un fallo forzado del gate (`GB_GATE_CASOS_ESPERADOS=13`), cuánto tarda Modal en entregar otro contenedor y qué ve el cliente mientras tanto.
+
 ## Aplicar
 
 ```bash

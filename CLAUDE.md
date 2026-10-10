@@ -68,7 +68,10 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
 
 **Paso en curso:** M0 **aceptado** (2026-10-10, `experimentos/2026-10-09_m0-gate/`);
 pendiente M0b (gate y CPUs en Modal, necesita código de despliegue o token de
-cuenta) y aplicar el parche. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+cuenta) y aplicar el parche. Estrategia en Modal: **fijar el tipo de hardware**
+(protección principal; experiencia del usuario, mecanismo `[ABIERTO]`) + el
+gate como red de seguridad (Modal descarta el contenedor que no arranca y
+entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
 
 - `[CÓDIGO]` **Producción en `.143` no corre `api@08932a6`:** el checkout de
   `/srv/GoldenBridge` está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07,
