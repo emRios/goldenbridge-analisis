@@ -14,6 +14,8 @@ Donde difiere de nuestra secuencia es en una decisión de orden, no de diseño: 
 
 ## 2. Hallazgo nuevo y grave: el gate de arranque de la imagen no bloquea
 
+> **Corrección del 2026-10-09, posterior a este contraste.** Lo que sigue es cierto para la rama `api`, **no para la imagen desplegada**. La imagen entregada (`files/goldenbridge-314t.tar.gz`) se construyó desde `feat/modal-migration` @ `24f9c6b`, donde la tubería ya estaba corregida: su gate **falla cerrado** ante una prueba fallida, aunque muere sin diagnóstico. Los huecos reales de la imagen son otros dos: pruebas saltadas que pasan como éxito, y que el arranque no cumple el contrato de ENTRYPOINT de Modal. Detalle verificado en `parches/2026-10-09_goldenbridge_gate-arranque/README.md`. Codex lo había advertido: "no afirmo haberlo provocado en la imagen desplegada".
+
 `[CÓDIGO]` `docker/arranque.sh` L43-44:
 
 ```sh
