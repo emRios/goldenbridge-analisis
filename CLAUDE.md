@@ -85,6 +85,11 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
   de Modal. Parche (sobre `feat/modal-migration`) y prueba en
   `parches/2026-10-09_goldenbridge_gate-arranque/` y
   `experimentos/2026-10-09_m0-gate/` (rama `paso/m0-gate`).
+- `[MEDIDO]` **Endpoint Modal en vivo (2026-10-10 05:11 UTC, un `GET /health`
+  con proxy-auth):** `healthy`, `max_sessions: 120` efectivo, respuesta en
+  **26,4 s** = arranque en frío ⇒ la app escala a cero sin tráfico
+  (`[INFERENCIA]` no hay `min_containers=1`). Sin cabeceras: 401. El
+  `/health` no informa CPU ni si corrió el gate.
 - `[CÓDIGO]` **Dos líneas de despliegue divergentes en GoldenBridge:** `api`
   (código, auditado) y `feat/modal-migration` (Docker + traspaso a Modal en
   `docker/README.md`, con el ejemplo de wrapper `Image.from_registry` +
