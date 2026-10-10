@@ -71,14 +71,24 @@ pendiente M0b (gate y CPUs en Modal, necesita código de despliegue o token de
 cuenta) y aplicar el parche. Estrategia en Modal: **fijar el tipo de hardware**
 (protección principal; experiencia del usuario, mecanismo `[ABIERTO]`) + el
 gate como red de seguridad (Modal descarta el contenedor que no arranca y
-entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`.
+**M1 listo para correr** (rama `paso/m1-linea-base`,
+`experimentos/2026-10-10_m1-linea-base/`): escalera 10-100 a 60 ms sobre un
+contenedor de laboratorio de la imagen en el puerto 8776, con CYCLE-PROBE,
+proveedores reales (M1a: aún no hay simuladores) y criterios preregistrados
+que dan K₆₀ y rodilla₆₀ en `veredicto.txt`. Cliente validado contra un
+servidor falso. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
 
 - `[CÓDIGO]` **Producción en `.143` no corre `api@08932a6`:** el checkout de
   `/srv/GoldenBridge` está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07,
   con cambios locales) = `api` + 24 commits de F261, 393 líneas nuevas en
   `websocket_server.py`. Tres líneas de GoldenBridge: `api` (auditada),
   `feat/f261-call-summary` (producción `.143`), `feat/modal-migration`
-  (imagen de Modal). M1 debe medir lo que corre, no `api`.
+  (imagen de Modal).
+- `[CÓDIGO]` **La imagen es `api` limpio:** `src/` y `config/` de `24f9c6b`
+  son idénticos a `api@08932a6`; `feat/modal-migration` sólo agrega Docker y
+  docs. M1 mide la imagen = el "monolito `api` limpio" de la estrategia = lo
+  que va a Modal. Producción (`f261`) sería otra campaña con su propia imagen.
 
 **Hechos nuevos que no están más abajo** (verificados; detalle en
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md`):

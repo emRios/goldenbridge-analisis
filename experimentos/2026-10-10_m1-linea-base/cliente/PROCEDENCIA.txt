@@ -1,0 +1,20 @@
+origen=GoldenBridge/tools/loadtest/td1_client.py (copia de trabajo local, rama feat/coalescer-integrity-probe, sin commitear)
+origen_base_commit=08932a64645bff74030ad2bd63543dd2334b8101
+origen_sha256=23e87d75c05429a72ef0bd00fa4fc50b6f6aa29f93714fda8c84eb9e48279d8d
+copiado=2026-10-10
+
+cambios_m1 (todos marcados [M1] en el código; envío y recepción sin cambios de ritmo):
+  1. gen_lag: retraso del generador por paquete (p50/p99/max por sesión).
+  2. voz_span: tramo con voz de cada frase, por energía (umbral máx(300, pico − 20 dB)),
+     con decodificador µ-law propio. Verificado contra audioop: 256/256 iguales.
+  3. ttfab: del último frame CON VOZ enviado al primer audio del episodio siguiente.
+     Si empieza otra frase sin respuesta, cuenta en ttfab_perdidos (end_ok).
+  4. corte: del primer frame con voz de la interrupción al último audio del bot de ese
+     episodio; extra fin=natural si llegó AgentAudioDone (la interrupción no cortó).
+  5. barge-in: el locutor salta al inicio de la VOZ, no del archivo. Con audios con
+     silencio inicial el original "interrumpía" con silencio.
+
+validacion_local (2026-10-10, servidor falso de energía, 4 sesiones, 60 ms, 70 s):
+  ttfab 630-739 ms (esperado ~600-700) · corte fin=cortado 18 = 18 cortes del falso,
+  689-747 ms (esperado ~650-750) · fin=natural 1 a 1.125 ms (lo que le quedaba al bot).
+  gen_lag p99 ~22-28 ms en Windows (granularidad del temporizador); en Linux debe ser ≤ 5.
