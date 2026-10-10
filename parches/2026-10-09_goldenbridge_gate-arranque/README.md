@@ -36,7 +36,13 @@ Simulado en la laptop con un pytest de juguete sobre los scripts reales:
 
 ## Lo que queda abierto `[ABIERTO]`
 
-**Si el gate corre hoy en Modal** depende del archivo de despliegue de Modal, que no está en ningún repo. El traspaso (`docker/README.md` de `feat/modal-migration`) muestra `Image.from_registry(...)` + `@modal.asgi_app()` sin `.entrypoint([])`: con ese arranque, eso no podría funcionar, así que el despliegue real hace otra cosa. Para cerrarlo: leer el archivo de despliegue, o buscar en los logs de un arranque en frío de Modal la línea `[arranque] verificando la referencia congelada`.
+**Si el gate corre hoy en Modal** depende del archivo de despliegue de Modal, que no está en ningún repo. El traspaso (`docker/README.md` de `feat/modal-migration`) muestra `Image.from_registry(...)` + `@modal.asgi_app()` sin `.entrypoint([])`: con este arranque eso no podría funcionar, así que el despliegue real hace otra cosa.
+
+Endpoint en producción (dato del usuario, 2026-10-09): `https://shejo--golden-bridge-bridge-serve.modal.run`, WS en `/v1/agent/converse`. Por el patrón de URL de Modal `<workspace>--<app>-<etiqueta>`: workspace `shejo`, app `golden-bridge`, etiqueta `bridge-serve`, que corresponde a una clase `Bridge` con método web `serve` `[INFERENCIA]`.
+
+`[INFERENCIA]` Como el endpoint funciona y este arranque no entrega el control al runtime de Modal, el despliegue tuvo que reemplazar o quitar el entrypoint de la imagen. Entonces **el gate no corre en Modal**, salvo que el código de despliegue lo invoque por su cuenta (por ejemplo en un `@modal.enter` de `Bridge`). Si se confirma, el riesgo real es que ninguna réplica de Modal verifica `avx512_vnni`.
+
+Para cerrarlo, en orden de costo: (1) leer el código de despliegue de la app `golden-bridge` y buscar `.entrypoint(`, `@modal.enter` y llamadas a `arranque` o `pytest`; (2) en los logs de un arranque en frío (panel de Modal o `modal app logs golden-bridge`, con token de cuenta), buscar `[arranque] verificando la referencia congelada`. Sondear el endpoint no sirve: el health no dice si el gate corrió y puede despertar un contenedor.
 
 ## Aplicar
 
