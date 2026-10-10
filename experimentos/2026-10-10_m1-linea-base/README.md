@@ -72,7 +72,7 @@ Sólo **N**: 10 → 25 → 50 → 75 → 100 llamadas vivas. Imagen, config, CPU
 
 Por repetición: 5 escalones × ~13 min ≈ **65 min**. Son Σ N × ~690 s ≈ **180.000 s-sesión (≈ 50 h de llamadas)**, del orden de 13.000 turnos completos con STT + LLM + TTS. Equivale a ~16 % del volumen de las 6 campañas medidas. Tres repeticiones ≈ 3,3 h y el triple de costo.
 
-**Empezar con un ensayo corto** (5 min, ~1.200 s-sesión) y mirar el resumen antes de la escalera completa.
+**Empezar con un ensayo corto** (~5 min de reloj; 10 sesiones × ~208 s ≈ 2.100 s-sesión ≈ 35 min de llamada, ~160 turnos) y mirar el resumen antes de la escalera completa.
 
 ## Preparar (una vez, en el servidor)
 
