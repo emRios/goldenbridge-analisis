@@ -98,6 +98,33 @@ O pegame el `resumen.tsv` y el manifiesto, y lo subo yo.
 
 Si el gate corre **hoy** en Modal. Eso depende del archivo de despliegue de Modal, que no está en ningún repo. Se cierra leyendo ese archivo o buscando `[arranque] verificando la referencia congelada` en los logs de un arranque en frío del endpoint.
 
-## Resultado
+## Resultado — ACEPTADO (2026-10-10 05:25 UTC)
 
-_Pendiente de la corrida en el servidor._
+Corrida en `.143` (`ip-172-31-7-92`, Xeon Platinum 8488C, `avx512_vnni=si`), imagen `goldenbridge:314t` cargada del archivo entregado (id `sha256:fe6fc8bc…`, digest del índice; es la misma imagen). Manifiesto: `resultados/20261010T052356Z/manifiesto.txt`. Resumen: `resultados/20261010T052356Z/resumen.tsv`.
+
+Verificado después de la corrida `[CÓDIGO]`: el hash del arranque nuevo probado (`2cb963a0…`) es el de `parches/…/arranque.sh`, y el del arranque de la imagen (`e0de26b6…`) es el de `24f9c6b`.
+
+| caso | NUEVO (parche) | VIEJO (imagen) |
+|---|---|---|
+| normal | 0 · 12/12, 0 saltadas · **OK** | sirve |
+| modelo alterado | 3 · 2 fallos · **OK** | código 1, sin diagnóstico · falla cerrado |
+| decisión alterada | 3 · 1 fallo · **OK** | código 1, sin diagnóstico · falla cerrado |
+| referencia del VAD ausente | 2 · falta artefacto · **OK** | **sirve** diciendo "referencia OK" · **HUECO CONFIRMADO** |
+| conteo distinto | 3 · 12/13 · **OK** | no aplica |
+| entrypoint de Modal | 0 · ejecuta el comando · **OK** | lanza GoldenBridge e ignora el comando · **NO CUMPLE CONTRATO MODAL** |
+
+`[MEDIDO]` Lo que queda demostrado con la imagen y los modelos reales:
+1. La imagen falla cerrado ante una prueba fallida, pero muere sin explicar por qué.
+2. **Sin `vad_probs.npz` la imagen sirve tráfico**: pytest salta las 6 pruebas de Silero y el gate lo da por bueno.
+3. **El arranque de la imagen no cumple el contrato de ENTRYPOINT de Modal**: con un comando de orquestador, lo ignora y arranca GoldenBridge.
+4. El arranque del parche corrige los tres puntos y no rompe el caso normal.
+
+Notas de la corrida:
+- `repo_sucio=si` fue un falso positivo: `run.sh` contaba como cambio la propia carpeta `resultados/` que crea. Corregido después en `run.sh` y en la plantilla.
+- El checkout de GoldenBridge en el servidor está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07, con cambios locales): `api@08932a6` + 24 commits de F261, 393 líneas nuevas en `websocket_server.py`. No afecta a esta prueba, que usa la imagen. **Sí afecta a M1**: la línea base debe medir lo que corre en producción, no `api`.
+
+## Qué sigue
+
+1. Aplicar el parche en GoldenBridge sobre `feat/modal-migration`, reconstruir la imagen y publicarla (ver `parches/…/README.md`).
+2. **M0b, en Modal:** confirmar si el gate corre hoy en las réplicas y qué CPUs entrega Modal (fracción sin `avx512_vnni`). Necesita el código de despliegue de `golden-bridge` o un token de cuenta.
+3. Decidir qué hacer con la divergencia de ramas: `api` no tiene los arreglos de Docker; producción corre `f261`; la imagen sale de `feat/modal-migration`.

@@ -66,7 +66,16 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
   C4 dueño por llamada (escenarios A, S1; B condicionado) · C5-C8 red real,
   contrato y Conversación, sólo tras el veredicto del laboratorio.
 
-**Paso en curso:** M0. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+**Paso en curso:** M0 **aceptado** (2026-10-10, `experimentos/2026-10-09_m0-gate/`);
+pendiente M0b (gate y CPUs en Modal, necesita código de despliegue o token de
+cuenta) y aplicar el parche. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+
+- `[CÓDIGO]` **Producción en `.143` no corre `api@08932a6`:** el checkout de
+  `/srv/GoldenBridge` está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07,
+  con cambios locales) = `api` + 24 commits de F261, 393 líneas nuevas en
+  `websocket_server.py`. Tres líneas de GoldenBridge: `api` (auditada),
+  `feat/f261-call-summary` (producción `.143`), `feat/modal-migration`
+  (imagen de Modal). M1 debe medir lo que corre, no `api`.
 
 **Hechos nuevos que no están más abajo** (verificados; detalle en
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md`):

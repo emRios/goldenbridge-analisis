@@ -60,7 +60,8 @@ M="$SALIDA/manifiesto.txt"
     echo "## este repo"
     echo "repo_commit=$(git -C "$REPO" rev-parse HEAD)"
     echo "repo_rama=$(git -C "$REPO" rev-parse --abbrev-ref HEAD)"
-    echo "repo_sucio=$( [ -n "$(git -C "$REPO" status --porcelain)" ] && echo si || echo no )"
+    # resultados/ se crea antes del manifiesto: no cuenta como cambio sin commitear
+    echo "repo_sucio=$( [ -n "$(git -C "$REPO" status --porcelain -- . ':(exclude)experimentos/*/resultados/**')" ] && echo si || echo no )"
     echo
     echo "## GoldenBridge"
     if [ -d "$GB_DIR/.git" ]; then
