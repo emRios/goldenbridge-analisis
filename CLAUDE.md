@@ -66,15 +66,46 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
   C4 dueño por llamada (escenarios A, S1; B condicionado) · C5-C8 red real,
   contrato y Conversación, sólo tras el veredicto del laboratorio.
 
-**Paso en curso:** M0. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+**Paso en curso:** M0 **aceptado** (2026-10-10, `experimentos/2026-10-09_m0-gate/`);
+pendiente M0b (gate y CPUs en Modal, necesita código de despliegue o token de
+cuenta) y aplicar el parche. Estrategia en Modal: **fijar el tipo de hardware**
+(protección principal; experiencia del usuario, mecanismo `[ABIERTO]`) + el
+gate como red de seguridad (Modal descarta el contenedor que no arranca y
+entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+
+- `[CÓDIGO]` **Producción en `.143` no corre `api@08932a6`:** el checkout de
+  `/srv/GoldenBridge` está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07,
+  con cambios locales) = `api` + 24 commits de F261, 393 líneas nuevas en
+  `websocket_server.py`. Tres líneas de GoldenBridge: `api` (auditada),
+  `feat/f261-call-summary` (producción `.143`), `feat/modal-migration`
+  (imagen de Modal). M1 debe medir lo que corre, no `api`.
 
 **Hechos nuevos que no están más abajo** (verificados; detalle en
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md`):
 
-- `[CÓDIGO]` **`docker/arranque.sh` L43-44: el gate de referencia no bloquea.**
-  `if ! pytest … | tail -20` en `sh` sin `pipefail` evalúa el status de `tail`;
-  la imagen Modal sirve tráfico aunque la referencia VNNI falle. `deploy.sh`
-  (`.143`) sí bloquea. Es M0.
+- `[CÓDIGO]` **Gate de arranque de la imagen (M0) — corregido el 2026-10-09.**
+  El `pytest | tail` que no bloquea existe **sólo en la rama `api`**
+  (`6e7843c`). Los arreglos de Docker del 31-ago (`24f9c6b`, `fb44e8a`,
+  `9c024fd`) están **sólo en `feat/modal-migration`** y nunca llegaron a
+  `api`. La imagen entregada (`files/goldenbridge-314t.tar.gz`, creada
+  2026-08-31) trae el arranque de `24f9c6b`: **falla cerrado** ante una
+  prueba fallida (muere mudo). Huecos reales en la imagen: (1) sin
+  `vad_probs.npz` pytest **salta** las 6 pruebas de Silero y sale con 0;
+  (2) **no cumple el contrato de ENTRYPOINT de Modal** (no hace `exec "$@"`),
+  así que en Modal o el runtime no arranca o el entrypoint fue quitado y el
+  gate no corre. `[ABIERTO]` cuál de las dos: falta el archivo de despliegue
+  de Modal. Parche (sobre `feat/modal-migration`) y prueba en
+  `parches/2026-10-09_goldenbridge_gate-arranque/` y
+  `experimentos/2026-10-09_m0-gate/` (rama `paso/m0-gate`).
+- `[MEDIDO]` **Endpoint Modal en vivo (2026-10-10 05:11 UTC, un `GET /health`
+  con proxy-auth):** `healthy`, `max_sessions: 120` efectivo, respuesta en
+  **26,4 s** = arranque en frío ⇒ la app escala a cero sin tráfico
+  (`[INFERENCIA]` no hay `min_containers=1`). Sin cabeceras: 401. El
+  `/health` no informa CPU ni si corrió el gate.
+- `[CÓDIGO]` **Dos líneas de despliegue divergentes en GoldenBridge:** `api`
+  (código, auditado) y `feat/modal-migration` (Docker + traspaso a Modal en
+  `docker/README.md`, con el ejemplo de wrapper `Image.from_registry` +
+  `@modal.asgi_app` + `@modal.concurrent(max_inputs=50)`).
 - `[DOCUMENTACIÓN]` ORT 1.24.4: `InferenceSession::Run` es seguro entre hilos.
   El comentario de SMART L224 está equivocado; el lock de smart-turn sólo
   cubre `run`, las features van fuera.

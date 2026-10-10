@@ -1,0 +1,13 @@
+caso	arranque	codigo	sirve_gb	runtime_modal	veredicto_gate	esperado	resultado
+normal	nuevo	0	no	no	gate: pytest=0 casos=12/12 fallos=0 errores=0 saltadas=0	codigo=0	OK
+normal	viejo	en_marcha	si	no	dice referencia OK	sirve	-
+modelo_alterado	nuevo	3	no	no	gate: pytest=1 casos=12/12 fallos=2 errores=0 saltadas=0	codigo=3	OK
+modelo_alterado	viejo	1	no	no	calla	no sirve	falla cerrado
+decision_alterada	nuevo	3	no	no	gate: pytest=1 casos=12/12 fallos=1 errores=0 saltadas=0	codigo=3	OK
+decision_alterada	viejo	1	no	no	calla	no sirve	falla cerrado
+referencia_vad_ausente	nuevo	2	no	no	ABORTA: faltan artefactos de la imagen	codigo=2	OK
+referencia_vad_ausente	viejo	en_marcha	si	no	dice referencia OK	no sirve	HUECO CONFIRMADO
+conteo_distinto	nuevo	3	no	no	gate: pytest=0 casos=12/13 fallos=0 errores=0 saltadas=0	codigo=3	OK
+conteo_distinto	viejo	-	-	-	no aplica	-	-
+modal_entrypoint	nuevo	0	no	si	gate: pytest=0 casos=12/12 fallos=0 errores=0 saltadas=0	codigo=0	OK
+modal_entrypoint	viejo	en_marcha	si	no	dice referencia OK	runtime Modal	NO CUMPLE CONTRATO MODAL
