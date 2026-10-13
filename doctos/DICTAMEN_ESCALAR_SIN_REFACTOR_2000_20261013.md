@@ -150,7 +150,7 @@ Los hilos "desactivados" en golden-modal. Con `OMP_NUM_THREADS` y `GB_ORT_INTRA_
 | **Secretos**: proxy-auth por engine, rotación | hoy un juego de prueba |
 | **Tres ramas de GB** (`api`, `f261`, `modal-migration`) | sin resolver; la imagen no trae F261 |
 
-Administrar 20 contenedores o 100 cuesta casi lo mismo, porque Modal los administra. Lo caro es automatizar esta tabla, y se paga igual con o sin refactor.
+Automatizar esta tabla se paga igual con o sin refactor. Lo que **no** es igual es operar 20 o 100 contenedores una vez automatizada: ver §4.4, que corrige lo que la primera versión de este dictamen decía aquí.
 
 ### 4.2 Lo que agrega dejarlo como está
 
@@ -165,6 +165,48 @@ Administrar 20 contenedores o 100 cuesta casi lo mismo, porque Modal los adminis
 - **Equipo y guardia en C++**; manuales y depuración desde cero; un fallo de memoria se lleva todas las llamadas del proceso, sin traza legible, y `[ABIERTO]` si Modal entrega volcados.
 - **Migración con dos versiones en paralelo** durante semanas o meses, comparadas con el mismo banco (M1).
 - **Lo que gana:** 2,5-5 veces menos contenedores, degradación gradual en vez de precipicio (si el diseño lo logra: es hipótesis), K estable e independiente de la mezcla de conversación.
+
+### 4.4 Corrección (2026-10-13): administrar 100 contenedores no es administrar 20
+
+La primera versión decía que "cuesta casi lo mismo porque Modal los administra". Es falso en lo que importa. Modal reparte, arranca y apaga; no rastrea una llamada ni explica por qué murió un contenedor. Y hay una aritmética simple: si **p** es la probabilidad de que un contenedor falle en una hora, hay **N × p incidentes por hora** y cada uno corta **K llamadas**. El total de llamadas cortadas, N × p × K = 2.000 × p, **no depende de K**; lo que depende de K es cuántos eventos tiene que mirar alguien. Con K = 20 hay cinco veces más incidentes, cinco veces más chicos, que con K = 100. Y con N también crecen los arranques en frío por campaña, los rechazos del gate, las oleadas de despliegue, el volumen de logs y los contenedores que hay que inspeccionar en un incidente.
+
+**Cómo se rastrea una llamada hoy** `[CÓDIGO]` (engine `d059295`, GB `api@08932a6`):
+
+| eslabón | identificador | qué queda registrado |
+|---|---|---|
+| marcador → Asterisk | el PAYLOAD de canal que el marcador decida mandar | `[ABIERTO]` si incluye `call_uuid` |
+| Asterisk → engine | `call_id` de Asterisk | todas las líneas del engine llevan `call_id` |
+| engine → GB | `Settings.variables` = ese PAYLOAD (`deepgram.py` L176-252) | GB registra `Per-call variables received` con `session_id` **y** `call_uuid` (L3034): **el único punto de unión entre los dos mundos**, y sólo existe si el marcador manda `call_uuid` |
+| dentro de GB | `session_id` (uuid4 que GB inventa al conectar, L2132) + `request_id` | cada línea de log y el span `voice_call` de Logfire (`session_id`, `request_id`, `campaign`) |
+| GB → engine | **nada** | GB no devuelve `session_id` ni `request_id` (no hay `Welcome`; `SettingsApplied` va sin ids). El engine tiene el receptor listo (L1253-1262) y nunca recibe nada: **el engine no puede decir "mi llamada X fue la sesión Y"** |
+| contenedor | **ninguno dentro de GB** | GB no registra hostname ni id de contenedor; `/health` tampoco. El id sólo existe del lado de Modal (`modal container list/logs/exec`, con token de cuenta). Para saber qué contenedor atendió una sesión hay que buscar el uuid en los logs de todos. `[ABIERTO]` si Logfire adjunta el host al span |
+| muerte del contenedor vista desde el engine | — | una advertencia `Deepgram Voice Agent connection closed` **sin `call_id`** (L1764), un `AgentAudioDone` sintético, y después nada: no cuelga, no reconecta, sigue mandando audio con un log de nivel *debug* por paquete. `[INFERIDO]` la persona queda en silencio hasta que cuelga |
+
+**Fallas por contenedor**, su radio y cómo se ven hoy:
+
+| falla | fuente | llamadas afectadas | cómo se ve hoy |
+|---|---|---|---|
+| preempción | `[DOCUMENTACIÓN]` Modal: todas las funciones por defecto, "rara", señal + gracia; el input se reintenta en otro contenedor, lo que para un WS vivo es una llamada cortada; `nonpreemptible=True` cuesta 3× | K | advertencia sin `call_id` en el engine |
+| OOM | `[DOCUMENTACIÓN]` límite duro de memoria | K | nada en GB (muere), lo mismo en el engine |
+| heartbeat timeout | `[DOCUMENTACIÓN]` proceso principal sin latido durante minutos → Modal mata el contenedor | K | "heartbeat timeout" en los logs de Modal |
+| excepción no capturada o fallo en una biblioteca nativa (ORT, soxr, torch) | GB es un proceso | K | traza en el log del contenedor, si la hay |
+| arranque fallido o gate en rojo | M0 | 0 cortadas; capacidad que llega 26-33 s tarde más el reintento | logs del contenedor rechazado |
+| degradación (precipicio) | `[MEDIDO]` | K degradadas | **nada**: sin error ni log |
+| contenedor desbalanceado | Modal reparte por conteo de inputs, no por carga; la mezcla de conversación cambia la carga | K degradadas | nada |
+| redespliegue | `[ABIERTO]` | todas las de los contenedores reemplazados | `[ABIERTO]` |
+| CPU sin VNNI si falla la fijación | M0 | decisiones distintas, silencioso | el gate lo convierte en rechazo |
+
+**Lo que hace falta para operar N contenedores.** Ninguno es un refactor:
+
+1. GB devuelve `session_id`, `request_id` y la identidad del contenedor en `SettingsApplied` (o en un `Welcome`). El engine ya lo captura y lo registra junto a `call_id`.
+2. GB registra al arrancar, en cada línea y en el span de Logfire la identidad del contenedor (`[ABIERTO]` qué variable expone Modal; si ninguna, el hostname).
+3. El marcador manda `call_uuid` en el PAYLOAD (verificar).
+4. El engine, al perder el WS: una línea de nivel *error* con `call_id`, `session_id` y contenedor, y una política explícita: reconectar como sesión nueva o colgar con mensaje. **Nunca silencio.**
+5. Métricas por contenedor exportadas, no sólo logs: `active_sessions`, `cycle_p90`, `resume_vad_p90`, con alarma de degradación.
+6. Un tablero: contenedores vivos, llamadas por contenedor, degradados, muertes por causa, rechazos del gate, arranques en frío por campaña.
+7. Un procedimiento: "la llamada X sonó mal" → `call_id` → `session_id` → contenedor → sus logs y métricas.
+
+Con esto, operar 100 sigue siendo más trabajo que operar 20: más eventos, más ruido, más contenedores que mirar. Lo que el refactor compra en este frente es dividir N entre 5. Lo que no compra es ninguno de los siete puntos, que hacen falta igual.
 
 ---
 
@@ -196,6 +238,8 @@ Ninguna de estas pruebas pasa de un día de trabajo ni de unos dólares.
 | calidad por llamada | buena sólo con K ≤ rodilla; fuera de ahí, degradada sin aviso | hipótesis: estable hasta 100; sin medir |
 | sensibilidad a la mezcla de conversación | alta; obliga a dimensionar por el peor ciclo | baja, si el diseño cumple |
 | fragilidad operativa | precipicio silencioso; exige alarma y rigor en `max_inputs` | fallos de C++ se llevan más llamadas por proceso |
+| incidentes por contenedor (§4.4) | N × p por hora, chicos; 5× más eventos que con K = 100 | N/5 × p, grandes; mismas llamadas afectadas en total |
+| trazabilidad (§4.4) | hay que construir los 7 puntos | hay que construir los mismos 7 |
 | equipo | Python, manuales existentes, CYCLE-PROBE | C++, guardia nueva, manuales nuevos |
 | reversibilidad | total | difícil una vez migrado |
 
