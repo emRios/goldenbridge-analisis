@@ -143,8 +143,10 @@ servidor falso. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
 `doctos/DICTAMEN_CODEX_MEDIAWORKER_CPP_20261009.md` →
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md` →
 `doctos/ESTRATEGIA_MEDIAWORKER_20261009.md` →
-`doctos/DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md` (escalar a 2.000 sin
-refactor es el camino por defecto; el cómputo no decide, la operación sí).
+`doctos/DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md` (**no refactorizar,
+sin condiciones**: 2.000 se alcanza con 40-100 contenedores en cualquier
+escenario de M1; M1 sólo dimensiona. Recomienda **parar el carril C y M2**;
+decisión del dueño pendiente).
 
 ---
 
