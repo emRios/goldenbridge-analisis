@@ -114,6 +114,13 @@ entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Sigu
 - `[INFERENCIA]` Ninguno de los precedentes auditados (FreeSWITCH, LiveKit)
   corre IA por trama dentro del trabajador dueño: la propuesta es una
   hipótesis a falsar, no una solución copiada.
+- `[DECISIÓN DEL DUEÑO 2026-10-13]` **GoldenBridge se reescribe en el stack
+  propio (C++ o C#). Es estratégica.** Criterios: control de punta a punta,
+  previsibilidad de K ("500 más es aritmética"), diagnóstico por llamada,
+  contención de fallas. **Costo de cómputo y días de desarrollo no son
+  restricción: no argumentar con ellos.** Carril C sigue con ese propósito;
+  M2 cancelado; M1 sigue como línea base y banco. Requisitos de control en
+  `DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md`.
 - `[DATO DEL USUARIO]` (2026-10-12/13) **K real por proceso 40-50, a veces
   38-45 según los ciclos de conversación** (cae en la banda degradada de la
   curva medida). **El refactor, si se hace, es todo en C++**, incluida la
@@ -133,10 +140,10 @@ entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Sigu
 `doctos/DICTAMEN_CODEX_MEDIAWORKER_CPP_20261009.md` →
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md` →
 `doctos/ESTRATEGIA_MEDIAWORKER_20261009.md` →
-`doctos/DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md` (**no refactorizar,
-sin condiciones**: 2.000 se alcanza con 40-100 contenedores en cualquier
-escenario de M1; M1 sólo dimensiona. Recomienda **parar el carril C y M2**;
-decisión del dueño pendiente).
+`doctos/DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md` (hechos de costo,
+trazabilidad y fallas por contenedor; **decisión del dueño: reescribir en el
+stack propio, estratégica**; requisitos de control para la reescritura;
+M2 cancelado; `[ABIERTO]` C++ o C#).
 
 ---
 

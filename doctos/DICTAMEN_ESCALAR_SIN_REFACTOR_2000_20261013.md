@@ -2,11 +2,31 @@
 
 **Fecha:** 2026-10-13 · **Pregunta:** GoldenBridge soporta hoy 40-50 llamadas por proceso; la meta es 2.000 concurrentes. ¿Qué implica, en costo, administración y riesgo, **no refactorizar** y escalar con N contenedores en Modal?
 
-**Decisión: no refactorizar. Sin condiciones.** Para llegar a 2.000 no hace falta, en ningún escenario: si M1 da 25 llamadas sanas por contenedor son 80 contenedores; si da 50, son 40. Las dos cifras se alcanzan hoy y cuestan < $6/h. **M1 dimensiona la flota, no decide si se escala ni si se refactoriza.** El refactor tampoco se justifica después: daría 2-5 veces menos contenedores (ahorro < $1,50/h) y menos eventos de incidente, no menos llamadas afectadas (§4.4); eso no paga 50-83 días-persona ni un equipo de C++, y ese beneficio no cambia con el tiempo. Si algún día se hace, es una decisión de producto (menos piezas en operación), no una respuesta a una falla. Las versiones anteriores de este párrafo ponían "disparadores" para reabrirlo; eran una cobertura y se retiran.
+## Decisión del dueño (2026-10-13) y marco de juicio
 
-**Consecuencia sobre la estrategia aprobada (`ESTRATEGIA_MEDIAWORKER_20261009.md`):** el carril C (C0-C4, MediaWorker en C++) se concibió para subir K por proceso, y K por proceso ya no limita llegar a 2.000. **Se recomienda pararlo, junto con M2.** Queda M1, para dimensionar y validar 60 ms. Decisión pendiente del dueño.
+**Se reescribe GoldenBridge en el stack propio (C++ o C#). Es una decisión estratégica, ya tomada.** Se juzga con estos criterios: **control de punta a punta**, **previsibilidad de la capacidad** ("si necesito 500 o 1.000 más, es aritmética"), **diagnóstico por llamada** (hoy: leer logs y escuchar la llamada), **contención de fallas**. El costo de cómputo y los días de desarrollo **no son restricción**. Las versiones anteriores de esta conclusión (tres, el mismo día) juzgaban con esos dos ejes y por eso concluían "no refactorizar"; se retiran. §3 queda como información, no como argumento.
 
-**Lo que sí se hace:** parches (GB devuelve `session_id` y contenedor; el engine nunca deja una llamada en silencio; tres límites de hilos en Modal) → configuración de Modal (`max_inputs`/`target_inputs`/`max_sessions`, precalentado, pruebas de redespliegue y vida del WS) → tablero y alarma de degradación → subida escalonada 200 → 500 → 1.000 → 2.000. Sobreaprovisionar a 20-25 por contenedor hasta que M1 dé la cifra a 60 ms: es margen, no espera.
+Lo que los hechos de este dictamen y del repo dicen sobre esos criterios, para el sistema actual:
+
+| criterio | estado del GoldenBridge actual |
+|---|---|
+| previsibilidad | rodilla 16-25 `[MEDIDO]`; 40-50 es banda degradada; K varía con la mezcla de conversación `[CÓDIGO]`; dos escaladas de hardware y el paso 3.11 → 3.14t para "casi" 50 `[DATO DEL USUARIO]`; 12 → 6 workers mejoró una métrica y empeoró el sistema `[MEDIDO]`. **K se descubre, no se calcula**: no hay modelo de costo por llamada |
+| diagnóstico | cadena de trazabilidad rota (§4.4); CYCLE-PROBE marcado "temporal, borrar" `[CÓDIGO]`; sin línea de tiempo por llamada |
+| contención | un proceso Python por contenedor; el engine deja la llamada en silencio al morir el contenedor `[CÓDIGO]` |
+| control del stack | tres ramas divergentes; imagen ≠ Modal (hilos, entrypoint); comportamiento que depende de hilos de bibliotecas de terceros y de banderas de CPU |
+
+**Requisitos de control para la reescritura** (si no están desde el primer día, se repite la historia en otro lenguaje):
+
+1. **Costo por llamada medido y estable**: µs por trama y bytes por llamada, acotados e independientes de la mezcla de conversación. Trabajo local por llamada (dueño por llamada), sin hilo único coordinador ni pools de terceros fuera de control.
+2. **K es una cuenta**: `K = núcleos / costo por llamada`, con margen, verificado en el laboratorio antes de producción.
+3. **Identificador de llamada de punta a punta** (marcador → Asterisk → engine → media → proveedores → grabación) y **línea de tiempo por llamada** con cada evento y su instante. "Qué pasó con X" se responde con una traza, no con logs ni audio.
+4. **Contención con tamaño conocido**: proceso por N llamadas con supervisor; el engine detecta la caída y actúa en tiempo acotado. Nunca silencio.
+5. **Entorno verificado al arrancar**: banderas de CPU, hilos, versiones (el gate de M0 es el patrón; se conserva).
+6. **Un artefacto, una rama, una configuración**, iguales en laboratorio y producción.
+
+**Qué cambia en la estrategia (`ESTRATEGIA_MEDIAWORKER_20261009.md`):** el carril C sigue, con propósito nuevo: construir el sistema controlado, con K calculado y verificado, no "falsar si el dueño por llamada sube K". **M2 (PoC Python) se cancela.** M1 sigue: es la línea base contra la que se demuestra la mejora y su cliente y criterios son el banco de la reescritura. `[ABIERTO]` **C++ o C#**: el engine ya está en C#; ORT tiene API oficial en C#; el riesgo es el recolector en la ruta de 20 ms (cero asignaciones en la ruta de audio, pausas medidas). Pendiente una comparación con los criterios de arriba.
+
+**El sistema actual, mientras tanto, es un puente, no la recomendación:** parches chicos (GB devuelve `session_id` y contenedor; el engine nunca deja una llamada en silencio; límites de hilos en Modal), `max_inputs` a K sano, precalentado, alarma de degradación (§4.1, §4.4, §5). Todo lo de §4.4 es además requisito de la reescritura.
 
 ---
 
