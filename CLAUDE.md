@@ -114,6 +114,16 @@ entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Sigu
 - `[INFERENCIA]` Ninguno de los precedentes auditados (FreeSWITCH, LiveKit)
   corre IA por trama dentro del trabajador dueño: la propuesta es una
   hipótesis a falsar, no una solución copiada.
+- `[DATO DEL USUARIO]` (2026-10-12/13) **K real por proceso 40-50, a veces
+  38-45 según los ciclos de conversación** (cae en la banda degradada de la
+  curva medida). **El refactor, si se hace, es todo en C++**, incluida la
+  Conversación. **Existe un ai-engine en C#** (~500 llamadas por engine) que
+  no está en el workspace. En golden-modal `OMP_NUM_THREADS` y
+  `GB_ORT_INTRA_OP` están desactivados aunque la imagen los fija a 1
+  (`[CÓDIGO]` config del tar); `[ABIERTO]` cómo y por qué.
+- `[DOCUMENTACIÓN]` Modal cobra $0,0472 por núcleo físico-hora (= 2 vCPU),
+  $0,008/GiB-h, el mayor entre pedido y usado; egreso $0,04/GiB desde
+  2026-10-01; vida máxima de un WebSocket **sin documentar**.
 
 **Índice de decisiones, en orden:**
 `doctos/AUDITORIA_REFACTOR_websocket_server_api_08932a6.md` →
@@ -122,7 +132,9 @@ entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Sigu
 `repo_analisis/` (8 motores de media) →
 `doctos/DICTAMEN_CODEX_MEDIAWORKER_CPP_20261009.md` →
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md` →
-`doctos/ESTRATEGIA_MEDIAWORKER_20261009.md`.
+`doctos/ESTRATEGIA_MEDIAWORKER_20261009.md` →
+`doctos/DICTAMEN_ESCALAR_SIN_REFACTOR_2000_20261013.md` (escalar a 2.000 sin
+refactor es el camino por defecto; el cómputo no decide, la operación sí).
 
 ---
 
