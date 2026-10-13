@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-10-13 · **Pregunta:** GoldenBridge soporta hoy 40-50 llamadas por proceso; la meta es 2.000 concurrentes. ¿Qué implica, en costo, administración y riesgo, **no refactorizar** y escalar con N contenedores en Modal?
 
-**Veredicto corto:** es viable y es el camino por defecto. **El cómputo no decide**: la factura de GoldenBridge en Modal cambia poco con K, y lo que la mueve son tres cosas que no dependen del refactor (hilos sueltos, sobre-reserva de CPU y egreso de AWS). Lo que sí cuesta es **operar cerca del precipicio** de degradación y el **ai-engine**. Ambas cosas se compran con contenedores de más y con trabajo operativo, no con una reescritura. El refactor queda condicionado a lo que diga M1, no a esta cuenta.
+**Conclusión:** **No refactorizar ahora. Escalar con GoldenBridge como está, a K sano (20-25 por contenedor hasta que M1 diga otra cosa, no 40-50), y construir la capa operativa.** Tres razones: (1) el costo no lo decide: entre K = 40 y K = 100 la factura cambia < $1,50/h, y operar sano con el doble de contenedores cuesta < $2,50/h; (2) la operación tampoco: trazabilidad, alarmas, precalentado y drenaje hacen falta igual, y el refactor sólo divide N entre 5; (3) los riesgos de hoy (engine en silencio al morir un contenedor, GB sin devolver `session_id`, `max_sessions` 120) se arreglan con parches. **Se reabre el refactor sólo si** M1 da rodilla < 25 a 60 ms **y** operar con ~100 contenedores produce incidentes que las alarmas y `max_inputs` no evitan, o si la latencia por llamada falla los criterios de la estrategia incluso con pocas llamadas. Siguiente paso: el ensayo de M1.
 
 ---
 
