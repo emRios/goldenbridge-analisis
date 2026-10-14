@@ -284,6 +284,10 @@ Reglas:
 
 ## ENTORNO
 
+- `[MEDIDO 2026-10-14]` `.143` = **c7i.4xlarge**, `us-east-2a`, Xeon Platinum
+  8488C (Sapphire Rapids, con `avx512_vnni`), 16 vCPU = **8 núcleos físicos ×
+  2 hilos (la vCPU *i* comparte núcleo con la *i+8*)**, 30,8 GiB visibles,
+  disco 194 GB (43 % usado), Ubuntu 22.04.5 con kernel 6.8.0-1066-aws.
 - `.143` cicla: **apaga 06:00 UTC, arranca 14:00 UTC**. Las mediciones con
   tráfico necesitan ventana de campaña.
 - Endpoint Modal: `https://shejo--golden-bridge-bridge-serve.modal.run`
