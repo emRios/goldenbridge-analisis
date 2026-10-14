@@ -99,3 +99,39 @@ En GoldenBridge, sobre `feat/modal-migration` (o la rama de donde salga la image
 5. **Regenerar la referencia dentro de la imagen nueva** (mismo stack), copiarla al repo y reconstruir.
 6. **Validar el umbral:** el 0,35 se ajustó con el int8. Con el fp32 las probabilidades se corren; hay que decidir si el umbral se mantiene. Esta prueba da la lista de decisiones que cambiarían.
 7. Correr el guardián en las dos máquinas: en las dos tiene que decir `referencia OK`.
+
+## Resultado (2026-10-14)
+
+Corridas: sin VNNI `resultados/20261014T193450Z/` (laptop, AMD Ryzen 5 7535HS, `avx2`+`fma`) · con VNNI `resultados/20261014T195156Z/` (`.143`, Xeon 8488C). Misma imagen (`goldenbridge:314t`, ONNX Runtime 1.24.4, numpy 2.5.2), mismo `smart-turn-v3.2-gpu.onnx` (sha256 `ab8dc64b…39be` verificado en las dos), 3.136 casos cada una (3.122 en común con audio más las 14 congeladas). El manifiesto de `.143` no está en el repo; sólo su `resultado.json`.
+
+| criterio | resultado |
+|---|---|
+| control: el int8 se mueve entre CPUs | **reproducido**: máx \|Δp\| 0,51 (congeladas) y 0,94 (barrido) |
+| fp32 independiente de la CPU, congeladas | **sí**: máx \|Δp\| 2,1e-6, 0 volteadas en 0,35 / 0,6 / 0,85 |
+| fp32 independiente de la CPU, barrido | **sí**: máx \|Δp\| 1,0e-5, 0 volteadas en 3.122 casos y tres umbrales |
+| veredicto de `analiza.py` | `salida=0` |
+
+Decisiones volteadas **entre CPUs** del barrido, 3.122 casos: int8 **279** (umbral 0,35) · **304** (0,6) · **363** (0,85) — entre 9 y 12 %; fp32 **0**.
+
+Latencia por inferencia en `.143` (la que cuenta): int8 27,1 ms · fp32 47,6 ms (p99 27,4 y 48,8). En la laptop: 107 y 137 ms, sin valor para decidir.
+
+### Lo que el resultado NO resuelve
+
+**Entre int8 y fp32, en la misma CPU, las decisiones difieren mucho**, y no es un efecto de la CPU: en `.143` se voltean 470 de 3.136 casos en 0,35 (15 %), 931 en 0,6 (30 %) y 980 en 0,85 (31 %); en la laptop, similar. Ejemplo: `u01_girasol@1000`, int8 0,987 contra fp32 0,462 en las dos CPUs. Las probabilidades de los dos archivos describen comportamientos distintos, no el mismo con otra precisión. `[ABIERTO]` por qué; no se ha comparado qué es cada archivo más allá de su nombre y tamaño.
+
+Los casos del barrido son cortes cada 20 ms en cualquier punto del audio, incluso a mitad de palabra. En producción smart-turn sólo se evalúa tras una pausa de la voz, así que el porcentaje de volteadas no equivale al porcentaje de turnos que cambiarían.
+
+**Se probó una verdad de referencia con los audios** (cortes a mitad de frase = "no ha terminado"; ≥ 400 ms de silencio tras la última voz = "terminó"). Resultó **no concluyente**: sólo 4 casos de "terminó" (los audios casi no traen silencio al final), y ambos modelos "cortan a mitad de frase" en más de la mitad de los cortes (int8 75 % y fp32 56 % en 0,35), lo que dice que el corpus no representa la distribución de producción, no que los modelos sean malos. **Por tanto este experimento no dice si el fp32 es mejor ni peor que el int8.**
+
+### Lo que sí queda establecido
+
+- Pasar a fp32 **elimina la dependencia de la CPU**: el requisito de `avx512_vnni` deja de hacer falta para smart-turn `[MEDIDO]`.
+- Mantener el int8 en una CPU sin VNNI cambia entre 9 y 12 % de las decisiones de los cortes medidos `[MEDIDO]`, más que lo visto en agosto (6 de 14, sobre 14 casos).
+- El fp32 cuesta ~20 ms más por inferencia en `.143` `[MEDIDO]`.
+
+### Antes de cambiar la imagen (paso 4 de la guía)
+
+Hace falta medir los dos modelos **sobre decisiones reales de producción**: la probabilidad de cada uno en cada pausa detectada por el VAD, en llamadas verdaderas, con el resultado (¿la persona había terminado?). Opciones, de menor a mayor costo:
+1. **Modo sombra** en las llamadas de prueba (paso 9 de la guía): el contenedor decide con el int8 y registra además la probabilidad del fp32 en cada decisión. Sin riesgo para la llamada.
+2. Escuchar una muestra de los casos que el barrido marca como volteados.
+3. Un corpus etiquetado de pausas reales.

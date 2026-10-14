@@ -1,0 +1,32 @@
+# manifiesto — 2026-10-14_smartturn-fp32 — 20261014T193450Z
+fecha_utc=20261014T193450Z
+host=LAPTOP-VBQJ2BNT
+forzado=0
+sesiones_activas_al_inicio=sin-servicio
+
+## este repo
+repo_commit=2503c3f8d7d5053c747f0b64dcfa4e1e4666a8fc
+repo_rama=paso/smartturn-fp32
+repo_sucio=no
+
+## GoldenBridge
+gb_dir=/srv/GoldenBridge (no es un repo git)
+gb_config=/srv/GoldenBridge/config/active.yaml (no encontrada)
+gb_imagen=goldenbridge:314t
+gb_imagen_id=sha256:fe6fc8bc8a65c087fdeabde25307345e2b98193efae921ccdf1b421b36da558e
+
+## máquina
+kernel=6.6.87.2-microsoft-standard-WSL2
+cpu_modelo=AMD Ryzen 5 7535HS with Radeon Graphics
+cpu_logicas=12
+cpu_disponibles=12
+avx512_vnni=NO
+mem_total_kb=7779532
+loadavg_inicio=0.30 0.68 0.51
+
+## entorno de hilos (deben ser 1 en GoldenBridge)
+GB_ORT_INTRA_OP=<no definida en este shell>
+OMP_NUM_THREADS=<no definida en este shell>
+OPENBLAS_NUM_THREADS=<no definida en este shell>
+estado_salida=0
+loadavg_fin=1.29 1.17 0.96

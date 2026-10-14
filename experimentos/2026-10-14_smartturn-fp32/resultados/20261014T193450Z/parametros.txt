@@ -1,0 +1,7 @@
+## fp32 · parámetros
+modelo_fp32=/home/eriosfx/smart-turn-v3.2-gpu.onnx
+modelo_fp32_sha256=ab8dc64b88713f90b571c15b714bd1330e6c883cad8763dacf65c9376dc539be
+modelo_fp32_bytes=32411198
+audios=/mnt/c/Users/GESTION/Documents/proyectos/refGolden/GoldenBridge/tools/loadtest/utterances (10 wav)
+paso_ms=20
+reps_lat=50
