@@ -135,3 +135,14 @@ Hace falta medir los dos modelos **sobre decisiones reales de producción**: la 
 1. **Modo sombra** en las llamadas de prueba (paso 9 de la guía): el contenedor decide con el int8 y registra además la probabilidad del fp32 en cada decisión. Sin riesgo para la llamada.
 2. Escuchar una muestra de los casos que el barrido marca como volteados.
 3. Un corpus etiquetado de pausas reales.
+
+## Imagen `goldenbridge:314t-fp32` (2026-10-14)
+
+Construida en la laptop (WSL) sobre `feat/modal-migration@9c024fd` + el parche del guardián (`1406660`) + el cambio a fp32 (`cbe7e4c`: modelo, ruta, `DECIDEN = ()`, `THRESHOLD = 0.35`, casos elegidos con `elige_cortes.py`, `intra_op = 1` en las pruebas, `GB_ORT_INTRA_OP` por defecto `1`) + la referencia regenerada dentro de la propia imagen. Rama local `fix/smartturn-fp32` en `~/gb-fp32` (WSL); no está en el remoto de GoldenBridge.
+
+`[MEDIDO]`
+- La imagen trae `GB_ORT_INTRA_OP=1`, `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1` (`docker image inspect`).
+- La referencia generada en la laptop coincide con el barrido de `.143` hasta la quinta cifra (`marg_1200ms` 0,353132 contra 0,353133).
+- **El guardián pasa en una CPU sin VNNI** (Ryzen 5 7535HS): `12 passed`, `casos=12/12 fallos=0 errores=0 saltadas=0`, `referencia OK`, `salida=0`. La imagen int8 no pasa en esa misma CPU.
+
+Pendiente: guardián y llamadas de prueba en `.143` (pasos 8-13 de la guía); ajustar el umbral con las decisiones registradas (`Smart Turn prediction`, nivel DEBUG, `GOLDEN_BRIDGE_DEBUG=1`).
