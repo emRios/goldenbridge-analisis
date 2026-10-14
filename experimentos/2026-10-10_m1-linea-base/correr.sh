@@ -87,9 +87,12 @@ unset linea valor
 log "credenciales pasadas: ${#ENV_ARGS[@]} de $(wc -w <<<"$GB_ENV_VARS") (nombres: $GB_ENV_VARS)"
 
 # ── config del laboratorio ───────────────────────────────────────────────────
-# La de producción, con dos cambios explícitos y nada más:
+# La de producción, con tres cambios explícitos y nada más:
 #   server.cycle_probe: true                       (instrumento)
 #   smart_turn.midspeech_check_every_n_chunks: N   (cuenta mensajes; 17 ≈ 1 s a 60 ms)
+#   smart_turn.model_path: la ruta DENTRO de la imagen. active.yaml puede traer
+#     una ruta absoluta de /srv que en el contenedor no existe, y GB lanza
+#     FileNotFoundError al cargar smart-turn (smart_turn_processor.py L92).
 # Se fusiona con el python de la imagen para no depender de PyYAML en el host.
 CONFIG_LAB="$SALIDA/config_lab.yaml"
 docker run --rm --network none --entrypoint python \
@@ -99,6 +102,7 @@ import os, sys, yaml
 c = yaml.safe_load(open("/in.yaml")) or {}
 c.setdefault("server", {})["cycle_probe"] = True
 c.setdefault("smart_turn", {})["midspeech_check_every_n_chunks"] = int(os.environ["MIDSPEECH_N"])
+c["smart_turn"]["model_path"] = "/app/smart-turn/smart-turn-v3.2-cpu.onnx"
 yaml.safe_dump(c, sys.stdout, sort_keys=False, allow_unicode=True)
 ' > "$CONFIG_LAB" || muere "no se pudo armar la config del laboratorio"
 log "config del laboratorio: $CONFIG_LAB (sha256 $(sha256sum "$CONFIG_LAB" | cut -c1-12))"

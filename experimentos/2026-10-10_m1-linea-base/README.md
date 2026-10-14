@@ -24,7 +24,7 @@ Sólo **N**: 10 → 25 → 50 → 75 → 100 llamadas vivas. Imagen, config, CPU
 | | |
 |---|---|
 | servicio | contenedor `m1lab` de `goldenbridge:314t`, puerto **8776** (producción sigue en 8765, intacta) |
-| config | `active.yaml` de producción + `server.cycle_probe: true` + `smart_turn.midspeech_check_every_n_chunks: 17`. Se guarda en `resultados/<sello>/config_lab.yaml` |
+| config | `active.yaml` de producción + `server.cycle_probe: true` + `smart_turn.midspeech_check_every_n_chunks: 17` + `smart_turn.model_path` forzado a la ruta dentro de la imagen (`active.yaml` puede traer una ruta de `/srv` que en el contenedor no existe). Se guarda en `resultados/<sello>/config_lab.yaml` |
 | CPU | `--cpus 8` y, si se da, `--cpuset-cpus`; se lee de vuelta el cgroup de adentro (`cpu.max`, `cpuset.cpus.effective`, `nproc`) |
 | cliente | `cliente/td1_client_m1.py` (T-D1 + tres métricas, ver `cliente/PROCEDENCIA.txt`), en núcleos aparte |
 | carga | N sesiones de habla (audios `utterances/listos`, 5,2 s, pausa 8 s) + 3 de control en silencio a 5 fps; 1 de cada 3 interrumpe al bot a los 1.800 ms |
