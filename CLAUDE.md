@@ -28,7 +28,9 @@ GoldenBridge (Python 3.14t, sin GIL, uvloop) — /v1/agent/converse
 
 **Destino:** GB se mueve a Modal (imagen `goldenbridge:314t`, endpoint único,
 autoescalado). **Asterisk, el túnel y el ai-engine se quedan en `.143`.** El
-tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
+tramo engine⇄GB pasa de loopback a red pública. Con el smart-turn cuantizado
+(imagen `314t`) la flota exige `avx512_vnni`; **con la imagen fp32
+(2026-10-14) ya no** — ver ESTADO ACTUAL.
 
 ---
 
@@ -66,19 +68,54 @@ tramo engine⇄GB pasa de loopback a red pública. La flota exige `avx512_vnni`.
   C4 dueño por llamada (escenarios A, S1; B condicionado) · C5-C8 red real,
   contrato y Conversación, sólo tras el veredicto del laboratorio.
 
-**Paso en curso:** M0 **aceptado** (2026-10-10, `experimentos/2026-10-09_m0-gate/`);
-pendiente M0b (gate y CPUs en Modal, necesita código de despliegue o token de
-cuenta) y aplicar el parche. Estrategia en Modal: **fijar el tipo de hardware**
-(protección principal; experiencia del usuario, mecanismo `[ABIERTO]`) + el
-gate como red de seguridad (Modal descarta el contenedor que no arranca y
-entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Siguiente: M1. **Orden acordado:** M60 → P → A (C++) → S1 → (B).
+**Estado al 2026-10-16** (esta rama, `paso/smartturn-fp32`; **no integrado a `main`**):
+
+- `[MEDIDO]` **Imagen con el modelo de fin de turno sin cuantizar:
+  `goldenbridge:314t-fp32`**, construida en la laptop (WSL) y **cargada en
+  `.143`**. Usa `smart-turn-v3.2-gpu.onnx` (fp32) en lugar del int8. El
+  guardián de arranque corregido (0 saltadas, 12/12, contrato de Modal,
+  **ya no exige `avx512_vnni`**) pasa en el Xeon 8488C de `.143` **y** en un
+  Ryzen 7535HS sin VNNI. Llamadas reales de prueba en `.143` (contenedor en el
+  puerto 8776, engine desviado con `GOLDEN_WS_URL`): "se escucha bien", 8
+  hilos en llamada, ninguno girando. Hilos: `GB_ORT_INTRA_OP`,
+  `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS` = 1. Detalle, números y guía en
+  `experimentos/2026-10-14_smartturn-fp32/` (`README.md`, `GUIA.md`).
+- `[MEDIDO]` fp32 frente a int8, 3.136 casos, tres umbrales: el **fp32 no se
+  mueve entre CPUs** (máx Δp 1e-5, 0 volteadas); el **int8 sí** (279-363
+  volteadas, 9-12 %). fp32 e int8 se contradicen entre sí 15-31 % en la misma
+  CPU: comportamiento distinto, **sin veredicto de cuál es mejor**. Latencia
+  en `.143`: 47,6 ms fp32 contra 27,1 ms int8.
+- `[CÓDIGO]` Código de la imagen fp32: rama local `fix/smartturn-fp32` en
+  `~/gb-fp32` (WSL), commits `1406660` (guardián), `cbe7e4c` (fp32),
+  `f34600e` (referencia regenerada, 15 casos, umbral 0,35). **No está en el
+  remoto de GoldenBridge.** Para Modal, `active.yaml` debe cambiar
+  `smart_turn.model_path` a `…-gpu.onnx` (si no, carga el int8 y el guardián
+  no lo detecta) y conservar el entrypoint.
+- `[CÓDIGO]` **`release/remarcacion-v1`** (`3ec0732`) = `api` + ventana tardía
+  del detector de buzón + F261 + remarcación; **sin los arreglos de Docker**
+  (su guardián es el de `pytest | tail`, que no bloquea). Probado en copia
+  descartable: arreglos de Docker + guardián + fp32 + referencia se aplican
+  con un solo conflicto (`config/default.yaml`). Imagen
+  `goldenbridge:remarcacion-v1-fp32` `[ABIERTO]` sin construir.
+  Procedimiento en `prompts/PROMPT_imagen_docker_goldenbridge_20261016.md`.
+- **M1** (la línea base del sistema actual a 60 ms, escalera 10-100) está en
+  la rama `paso/m1-linea-base`, **sin correr**. Debe correrse con la imagen
+  fp32: cambiar `GB_IMAGEN` y el `model_path` que su `correr.sh` fuerza a
+  `cpu.onnx`; usa el puerto 8776, igual que el contenedor de prueba.
+- **Refactor:** traspaso a una sesión nueva en
+  `prompts/PROMPT_refactor_goldenbridge_20261016.md`.
+
+**Anterior:** M0 (el guardián de arranque) **aceptado** el 2026-10-10
+(`experimentos/2026-10-09_m0-gate/`). Orden acordado entonces:
+M60 → P → A (C++) → S1 → (B); P (M2) quedó cancelado el 2026-10-13.
 
 - `[CÓDIGO]` **Producción en `.143` no corre `api@08932a6`:** el checkout de
   `/srv/GoldenBridge` está en `fb8a3b9` (`feat/f261-call-summary`, 2026-10-07,
   con cambios locales) = `api` + 24 commits de F261, 393 líneas nuevas en
-  `websocket_server.py`. Tres líneas de GoldenBridge: `api` (auditada),
+  `websocket_server.py`. Ramas de GoldenBridge: `api` (auditada),
   `feat/f261-call-summary` (producción `.143`), `feat/modal-migration`
-  (imagen de Modal). M1 debe medir lo que corre, no `api`.
+  (imagen de Modal, `src/` y `config/` idénticos a `api`),
+  `release/remarcacion-v1`.
 
 **Hechos nuevos que no están más abajo** (verificados; detalle en
 `doctos/CONTRASTE_CODEX_MEDIAWORKER_CPP_20261009.md`):
@@ -125,9 +162,10 @@ entrega otro). Detalle en `parches/2026-10-09_goldenbridge_gate-arranque/`. Sigu
   38-45 según los ciclos de conversación** (cae en la banda degradada de la
   curva medida). **El refactor, si se hace, es todo en C++**, incluida la
   Conversación. **Existe un ai-engine en C#** (~500 llamadas por engine) que
-  no está en el workspace. En golden-modal `OMP_NUM_THREADS` y
-  `GB_ORT_INTRA_OP` están desactivados aunque la imagen los fija a 1
-  (`[CÓDIGO]` config del tar); `[ABIERTO]` cómo y por qué.
+  no está en el workspace. Valores de hilos en golden-modal: `[ABIERTO]`. El
+  usuario pidió `1` al equipo de Modal y no sabe qué quedó aplicado; la imagen
+  los fija a 1 (`[CÓDIGO]` config del tar). Lo confirma la línea
+  `hilos fijados` del guardián en el log de cada contenedor.
 - `[DOCUMENTACIÓN]` Modal cobra $0,0472 por núcleo físico-hora (= 2 vCPU),
   $0,008/GiB-h, el mayor entre pedido y usado; egreso $0,04/GiB desde
   2026-10-01; vida máxima de un WebSocket **sin documentar**.
