@@ -22,6 +22,9 @@
 #   ESCALERA        "10 25 50 75 100"   REPS 1   PACKET_MS 60   MIDSPEECH_N 17
 #   RAMP_S 60   WARMUP_S 60   ESTABLE_S 600   PAUSA_S 8
 #   LAB_PUERTO 8776
+#   GB_IMAGEN       imagen a medir (goldenbridge:314t-fp32)
+#   SMART_MODEL     modelo de fin de turno DENTRO de la imagen
+#                   (/app/smart-turn/smart-turn-v3.2-gpu.onnx, el fp32)
 set -euo pipefail
 
 SALIDA="${1:?uso: correr.sh <directorio de salida>}"
@@ -31,7 +34,8 @@ CRUDO="$AQUI/resultados/crudo/$SELLO"
 mkdir -p "$CRUDO"
 
 GB_DIR="${GB_DIR:-/srv/GoldenBridge}"
-GB_IMAGEN="${GB_IMAGEN:-goldenbridge:314t}"
+GB_IMAGEN="${GB_IMAGEN:-goldenbridge:314t-fp32}"
+SMART_MODEL="${SMART_MODEL:-/app/smart-turn/smart-turn-v3.2-gpu.onnx}"
 GB_HEALTH="${GB_HEALTH:-http://127.0.0.1:8765/health}"
 GB_CONFIG="${GB_CONFIG:-$GB_DIR/config/active.yaml}"
 GB_ENV="${GB_ENV:-}"
@@ -68,7 +72,8 @@ el traspaso pide un juego propio, no el de producción. Decidirlo a conciencia."
     || muere "CLIENTE_PY=$CLIENTE_PY necesita websockets>=13 y audioop (python<=3.12)"
 command -v curl >/dev/null || muere "falta curl"
 docker image inspect "$GB_IMAGEN" >/dev/null 2>&1 || muere "no está la imagen $GB_IMAGEN"
-grep -qw avx512_vnni /proc/cpuinfo || log "AVISO: CPU sin avx512_vnni — el gate de la imagen va a negarse a servir"
+docker run --rm --network none --entrypoint test "$GB_IMAGEN" -f "$SMART_MODEL" \
+    || muere "la imagen $GB_IMAGEN no trae SMART_MODEL=$SMART_MODEL"
 
 # Credenciales: se leen del .env sin ejecutarlo y se exportan sólo las pedidas.
 # docker run -e NOMBRE (sin =valor) las toma del entorno: el valor no aparece
@@ -93,22 +98,26 @@ log "credenciales pasadas: ${#ENV_ARGS[@]} de $(wc -w <<<"$GB_ENV_VARS") (nombre
 #   smart_turn.model_path: la ruta DENTRO de la imagen. active.yaml puede traer
 #     una ruta absoluta de /srv que en el contenedor no existe, y GB lanza
 #     FileNotFoundError al cargar smart-turn (smart_turn_processor.py L92).
+#     Es SMART_MODEL: el fp32 por defecto. Si quedara el int8, el guardián de la
+#     imagen fp32 no lo detecta; por eso se lee de vuelta en el log de arranque.
 # Se fusiona con el python de la imagen para no depender de PyYAML en el host.
 CONFIG_LAB="$SALIDA/config_lab.yaml"
 docker run --rm --network none --entrypoint python \
     -v "$(readlink -f "$GB_CONFIG")":/in.yaml:ro \
-    -e MIDSPEECH_N="$MIDSPEECH_N" "$GB_IMAGEN" -c '
+    -e MIDSPEECH_N="$MIDSPEECH_N" -e SMART_MODEL="$SMART_MODEL" "$GB_IMAGEN" -c '
 import os, sys, yaml
 c = yaml.safe_load(open("/in.yaml")) or {}
 c.setdefault("server", {})["cycle_probe"] = True
 c.setdefault("smart_turn", {})["midspeech_check_every_n_chunks"] = int(os.environ["MIDSPEECH_N"])
-c["smart_turn"]["model_path"] = "/app/smart-turn/smart-turn-v3.2-cpu.onnx"
+c["smart_turn"]["model_path"] = os.environ["SMART_MODEL"]
 yaml.safe_dump(c, sys.stdout, sort_keys=False, allow_unicode=True)
 ' > "$CONFIG_LAB" || muere "no se pudo armar la config del laboratorio"
 log "config del laboratorio: $CONFIG_LAB (sha256 $(sha256sum "$CONFIG_LAB" | cut -c1-12))"
 
 {
     echo "## M1 · parámetros"
+    echo "gb_imagen=$GB_IMAGEN ($(docker image inspect "$GB_IMAGEN" --format '{{.Id}}'))"
+    echo "smart_model=$SMART_MODEL"
     echo "escalera=$ESCALERA"; echo "reps=$REPS"; echo "packet_ms=$PACKET_MS"
     echo "midspeech_n=$MIDSPEECH_N"; echo "ramp_s=$RAMP_S"; echo "warmup_s=$WARMUP_S"
     echo "estable_s=$ESTABLE_S"; echo "pausa_s=$PAUSA_S"; echo "speech=$SPEECH"
@@ -174,8 +183,18 @@ imagen={{.Image}}'
     } > "$dir/efectivo.txt"
     # quién más consume CPU en la máquina (producción, ai-engine, otros)
     ps -eo pid,pcpu,rss,nlwp,comm --sort=-pcpu | head -12 > "$dir/procesos_inicio.txt" || true
-    local arranque; arranque="$(docker logs "$LAB" 2>&1)"
+    # sin los colores ANSI de structlog, que pueden caer entre clave y valor
+    local arranque; arranque="$(docker logs "$LAB" 2>&1 | sed 's/\x1b\[[0-9;]*m//g')"
     grep -q "referencia OK" <<<"$arranque" || muere "el gate no imprimió 'referencia OK' en $paso"
+    # El modelo que GB cargó de verdad, no el que pedimos.
+    grep -q "Smart Turn processor created.*model_path=$SMART_MODEL" <<<"$arranque" || {
+        docker logs "$LAB" > "$dir/gb.log" 2>&1 || true
+        muere "GB no cargó $SMART_MODEL en $paso (ver la línea 'Smart Turn processor created' en $dir/gb.log)"; }
+    # Hilos de las bibliotecas, leídos dentro del contenedor: deben ser 1 1 1.
+    local hilos
+    hilos="$(docker exec "$LAB" sh -c 'echo "$GB_ORT_INTRA_OP $OMP_NUM_THREADS $OPENBLAS_NUM_THREADS"' 2>/dev/null || echo ?)"
+    echo "hilos_ort_omp_openblas=$hilos" >> "$dir/efectivo.txt"
+    [ "$hilos" = "1 1 1" ] || muere "hilos efectivos '$hilos' en $paso; se esperaba '1 1 1'"
     if grep -qiE "(LLM|TTS|STT) not available" <<<"$arranque"; then
         docker logs "$LAB" > "$dir/gb.log" 2>&1 || true
         muere "proveedores no disponibles en $paso — faltan credenciales (ver $dir/gb.log)"

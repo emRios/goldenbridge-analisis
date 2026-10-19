@@ -8,7 +8,7 @@
 #
 # Variables (con defaults):
 #   GB_DIR     checkout de GoldenBridge          (/srv/GoldenBridge)
-#   GB_IMAGEN  imagen Docker de GoldenBridge     (goldenbridge:314t)
+#   GB_IMAGEN  imagen Docker de GoldenBridge     (goldenbridge:314t-fp32)
 #   GB_HEALTH  endpoint de salud del servicio    (http://127.0.0.1:8765/health)
 #   GB_CONFIG  config efectiva a registrar       ($GB_DIR/config/active.yaml)
 #   FORZAR     1 = correr aunque haya llamadas activas
@@ -18,7 +18,7 @@ AQUI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(git -C "$AQUI" rev-parse --show-toplevel)"
 GB_DIR="${GB_DIR:-/srv/GoldenBridge}"
 GB_DIR="$(cd "$GB_DIR" 2>/dev/null && pwd || echo "$GB_DIR")"
-GB_IMAGEN="${GB_IMAGEN:-goldenbridge:314t}"
+GB_IMAGEN="${GB_IMAGEN:-goldenbridge:314t-fp32}"
 GB_HEALTH="${GB_HEALTH:-http://127.0.0.1:8765/health}"
 GB_CONFIG="${GB_CONFIG:-$GB_DIR/config/active.yaml}"
 FORZAR="${FORZAR:-0}"
@@ -102,9 +102,6 @@ M="$SALIDA/manifiesto.txt"
 } > "$M"
 log "manifiesto: $M"
 
-if grep -q '^avx512_vnni=NO' "$M"; then
-    log "AVISO: esta CPU no tiene avx512_vnni. Las decisiones de smart-turn difieren de producción."
-fi
 if grep -qE '^(repo|gb)_sucio=si' "$M"; then
     log "AVISO: hay cambios sin commitear; el resultado no será reproducible desde el commit."
 fi
