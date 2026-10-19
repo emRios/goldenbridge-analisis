@@ -21,6 +21,8 @@
 #   SPEECH          carpeta de audios ($GB_DIR/tools/loadtest/utterances/listos)
 #   ESCALERA        "10 25 50 75 100"   REPS 1   PACKET_MS 60   MIDSPEECH_N 17
 #   RAMP_S 60   WARMUP_S 60   ESTABLE_S 600   PAUSA_S 8
+#   TURNOS          espera (default: cada frase espera a que el bot termine) | reloj
+#   HUECO_MS 800   SIN_RESP_S 10   (sólo con TURNOS=espera)
 #   LAB_PUERTO 8776
 #   GB_IMAGEN       imagen a medir (goldenbridge:314t-fp32)
 #   SMART_MODEL     modelo de fin de turno DENTRO de la imagen
@@ -53,6 +55,9 @@ RAMP_S="${RAMP_S:-60}"
 WARMUP_S="${WARMUP_S:-60}"
 ESTABLE_S="${ESTABLE_S:-600}"
 PAUSA_S="${PAUSA_S:-8}"
+TURNOS="${TURNOS:-espera}"
+HUECO_MS="${HUECO_MS:-800}"
+SIN_RESP_S="${SIN_RESP_S:-10}"
 LAB_PUERTO="${LAB_PUERTO:-8776}"
 FORZAR="${FORZAR:-0}"
 LAB="m1lab"
@@ -89,7 +94,7 @@ for nombre in $GB_ENV_VARS; do
     ENV_ARGS+=(-e "$nombre")
 done
 unset linea valor
-log "credenciales pasadas: ${#ENV_ARGS[@]} de $(wc -w <<<"$GB_ENV_VARS") (nombres: $GB_ENV_VARS)"
+log "credenciales pasadas: $(( ${#ENV_ARGS[@]} / 2 )) de $(wc -w <<<"$GB_ENV_VARS") (nombres: $GB_ENV_VARS)"
 
 # ── config del laboratorio ───────────────────────────────────────────────────
 # La de producción, con tres cambios explícitos y nada más:
@@ -121,6 +126,7 @@ log "config del laboratorio: $CONFIG_LAB (sha256 $(sha256sum "$CONFIG_LAB" | cut
     echo "escalera=$ESCALERA"; echo "reps=$REPS"; echo "packet_ms=$PACKET_MS"
     echo "midspeech_n=$MIDSPEECH_N"; echo "ramp_s=$RAMP_S"; echo "warmup_s=$WARMUP_S"
     echo "estable_s=$ESTABLE_S"; echo "pausa_s=$PAUSA_S"; echo "speech=$SPEECH"
+    echo "turnos=$TURNOS"; echo "hueco_ms=$HUECO_MS"; echo "sin_resp_s=$SIN_RESP_S"
     echo "speech_sha256=$(cat "$SPEECH"/*.wav | sha256sum | cut -d' ' -f1)"
     echo "gb_cpus=$GB_CPUS"; echo "gb_cpuset=${GB_CPUSET:-<sin fijar>}"
     echo "cliente_cpuset=${CLIENTE_CPUSET:-<sin fijar>}"
@@ -212,12 +218,19 @@ imagen={{.Image}}'
     echo "t0_epoch=$t0" >> "$dir/efectivo.txt"
     log "$paso: $n llamadas · ramp ${RAMP_S}s + warm-up ${WARMUP_S}s + estable ${ESTABLE_S}s"
     local pre=(); [ -n "$CLIENTE_CPUSET" ] && pre=(taskset -c "$CLIENTE_CPUSET")
+    # [M1b] por defecto cada frase espera a que el bot termine (ensayo del 19-oct)
+    local turnos=()
+    case "$TURNOS" in
+        espera) turnos=(--espera-bot --hueco-ms "$HUECO_MS" --sin-respuesta-s "$SIN_RESP_S") ;;
+        reloj)  ;;
+        *) muere "TURNOS=$TURNOS no es espera ni reloj" ;;
+    esac
     set +e
     "${pre[@]}" "$CLIENTE_PY" -W ignore "$AQUI/cliente/td1_client_m1.py" \
         --url "ws://127.0.0.1:$LAB_PUERTO/v1/agent/converse" \
         --sessions "$n" --controls 3 --ramp "$RAMP_S" --hold "$((WARMUP_S + ESTABLE_S))" \
         --speech "$SPEECH" --utt-s 0 --pause-s "$PAUSA_S" --packet-ms "$PACKET_MS" \
-        --barge-in-ms 1800 --barge-in-cada 3 \
+        --barge-in-ms 1800 --barge-in-cada 3 "${turnos[@]}" \
         --out "$dir/cliente.tsv" > "$dir/cliente.log" 2>&1
     local rc=$?
     set -e

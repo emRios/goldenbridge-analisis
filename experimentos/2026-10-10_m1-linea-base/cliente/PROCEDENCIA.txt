@@ -18,3 +18,18 @@ validacion_local (2026-10-10, servidor falso de energía, 4 sesiones, 60 ms, 70 
   ttfab 630-739 ms (esperado ~600-700) · corte fin=cortado 18 = 18 cortes del falso,
   689-747 ms (esperado ~650-750) · fin=natural 1 a 1.125 ms (lo que le quedaba al bot).
   gen_lag p99 ~22-28 ms en Windows (granularidad del temporizador); en Linux debe ser ≤ 5.
+
+cambios_m1b (2026-10-19, marcados [M1b]; el modo por reloj queda igual):
+  6. --espera-bot: cada frase espera a que el bot termine (AgentAudioDone después del
+     inicio de su habla + --hueco-ms 800 sin audio; sin AgentAudioDone, --silencio-s 3).
+     Si el bot no empieza a responder en --sin-respuesta-s 10, sigue (perdido). Si no
+     calla en --espera-max-s 60, le habla encima. El desfase entre sesiones pasa a ser
+     un retraso antes de la primera frase, que además espera el saludo. La interrupción
+     intencional (--barge-in-ms) funciona igual mientras se espera.
+     end_ok agrega espera_bot=si, sin_respuesta y espera_max.
+
+validacion_local_m1b (2026-10-19, laptop, servidor falso de energía con respuestas de
+3/9/5/12 s que corta tras 600 ms de voz encima; 4 sesiones, 60 ms, 100 s, 1 de 3 interrumpe):
+  espera-bot: sesiones que no interrumpen 0 cortes del falso (7/8 y 7/7 completas),
+  ttfab_perdidos 0, sin_respuesta 0, espera_max 0. reloj (control, mismo falso):
+  1 corte del falso en cada sesión que no interrumpe (la respuesta de 12 s pisada).

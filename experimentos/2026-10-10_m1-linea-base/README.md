@@ -28,7 +28,7 @@ Sólo **N**: 10 → 25 → 50 → 75 → 100 llamadas vivas. Imagen, config, CPU
 | lectura de vuelta | por escalón, el arranque se aborta si no hay `referencia OK`, si la línea `Smart Turn processor created` no trae `model_path=$SMART_MODEL` (el guardián de la imagen fp32 no detecta un int8 cargado por config), o si `GB_ORT_INTRA_OP OMP_NUM_THREADS OPENBLAS_NUM_THREADS` dentro del contenedor no es `1 1 1`. Queda en `efectivo.txt` |
 | CPU | `--cpus 8` y, si se da, `--cpuset-cpus`; se lee de vuelta el cgroup de adentro (`cpu.max`, `cpuset.cpus.effective`, `nproc`) |
 | cliente | `cliente/td1_client_m1.py` (T-D1 + tres métricas, ver `cliente/PROCEDENCIA.txt`), en núcleos aparte |
-| carga | N sesiones de habla (audios `utterances/listos`, 5,2 s, pausa 8 s) + 3 de control en silencio a 5 fps; 1 de cada 3 interrumpe al bot a los 1.800 ms |
+| carga | N sesiones de habla (audios `utterances/listos`, 5,2 s) + 3 de control en silencio a 5 fps; 1 de cada 3 interrumpe al bot a los 1.800 ms. **Turnos (`TURNOS=espera`, desde el 2026-10-19):** cada frase espera a que el bot termine su respuesta (`AgentAudioDone` + 800 ms sin audio); si no responde en 10 s, sigue. La pausa de 8 s sólo fija el desfase inicial. `TURNOS=reloj` vuelve al horario fijo (5,2 s + 8 s). Ver "Ensayo del 2026-10-19" |
 | tiempos | rampa 60 s · calentamiento 60 s (descartado) · **10 min estables** por escalón |
 | proveedores | **reales** (Gotenks STT/LLM/TTS, Ursula), con las credenciales de `GB_ENV` |
 
@@ -61,6 +61,16 @@ Sólo **N**: 10 → 25 → 50 → 75 → 100 llamadas vivas. Imagen, config, CPU
 - **Rodilla₆₀** = primer N con `cp_cycle_p90_med` > 2 × el de 10.
 - Si **K₆₀ ≥ 100** → se aplica la regla de "beneficio" de §7 y M2/A pasan a ser opcionales.
 - Si K₆₀ < 100 → M2 (P) y A se miden contra esta misma escalera y config.
+
+## Ensayo del 2026-10-19 (`.143`, `resultados/20261019T200602Z/`)
+
+Un escalón de 10 llamadas, 2 min estables, imagen `goldenbridge:remarcacion-v1-jef-fp32` (`release/remarcacion-v1` + rama `Jef` + fp32), config `/app/config/default.yaml` de la imagen, laboratorio en el puerto 8777 (8776 es `gb-rem-jef`), turnos **por reloj**. Valores de `resumen.tsv` y del `gb.log` crudo `[MEDIDO]`:
+
+- **Válido:** `gen_lag_p99_max` 2 ms, 0 muertes, 13/13 aplicadas, cpuset `2-5,10-13` leído de vuelta, `ping_ctrl_p99` 3 ms.
+- **No sano por el criterio 1:** `cp_cycle_p90_med` 6,6 > 5 ms. Pero submit 0,4 · resume 0,3 · post 0,2 ms: el ciclo es casi todo `job` (5,8 ms) con ~9 tramas por lote (`cp_fpc_med` 9,03). El criterio de 5 ms se pensó por mensaje y CYCLE-PROBE mide por lote `[INFERIDO]`. **`[ABIERTO]` qué hacer con el criterio 1: decisión del dueño, no se cambia aquí.**
+- **Trabajo por trama ≈ 0,64 ms** (la regresión histórica da 0,25) y `cpu_por_llamada` 0,038 (histórico 0,022). Candidatos `[INFERIDO]`, cada uno de una variable: `noisereduce` ahora corre (lotes de ~180 ms superan su guarda de 100 ms) · hilos de ORT en 1.
+- **El perfil por reloj midió interrupciones, no turnos:** 147 `Turn close` para ~148 frases, pero **90 `Barge-in triggered`, de los que sólo 28 fueron intencionales**. ~6 de cada 10 frases empezaron con el bot todavía hablando (primer audio ~1,6 s + respuestas de 4-10 s > pausa de 8 s). De ahí `ttfab_perdidos` 55, 69 `speak` contra 28 `audio_done`. Por eso desde ese día `TURNOS=espera` es el default (cliente `[M1b]`, validado en local, ver `cliente/PROCEDENCIA.txt`).
+- `[ABIERTO]` el corte de ~2 s (`corte_p50` 2.042 ms) en las interrupciones intencionales: se vuelve a medir con el perfil corregido.
 
 ## Lo que esta versión NO cumple de la estrategia — `[ABIERTO]`
 

@@ -8,6 +8,10 @@ Agrega tres filas al TSV, sin cambiar el envío ni la recepción:
 La voz de cada frase se ubica por energía (voz_span): los audios traen
 silencio al inicio y al final, y anclar al archivo medía otra cosa.
 Al interrumpir, el locutor salta al inicio de la VOZ, no del archivo.
+[M1b 2026-10-19] --espera-bot: cada frase espera a que el bot termine su
+respuesta, como una persona, en vez de seguir un horario fijo. Con horario
+fijo (pausa 8 s) el ensayo del 19-oct pisó al bot en ~6 de cada 10 frases
+(90 barge-in, 28 intencionales) y midió interrupciones, no turnos.
 Origen y hash en PROCEDENCIA.txt.
 
 T-D1 — burst con sondas por-conexión para zanjar M1 (app-drain) vs M2 (loop-starvation).
@@ -233,9 +237,19 @@ class Locutor:
     producción): antes de eso el gate rechaza la interrupción por eco y no se
     ejercita nada. Y se interrumpe UNA vez por episodio de habla del bot —
     `_episodio` recuerda cuál ya se cortó.
+
+    [M1b] Con `espera` la pausa deja de ser un número fijo de frames: al
+    terminar la frase, el locutor manda silencio hasta que el bot respondió y
+    calló (AgentAudioDone después del inicio de su habla, más `hueco_s` sin
+    audio). Si el bot no empieza a responder en `sin_resp_s`, sigue con la
+    frase siguiente (cuenta como perdido). Si el bot no calla en `max_s`, le
+    habla encima. El desfase entre sesiones (`offset`) pasa a ser un retraso
+    antes de la primera frase, que además espera a que termine el saludo.
+    La interrupción intencional (`barge_ms`) funciona igual: corre mientras
+    se espera.
     """
 
-    def __init__(self, speech_frames, pause_frames, offset, barge_ms, st):
+    def __init__(self, speech_frames, pause_frames, offset, barge_ms, st, espera=None):
         self.sp = speech_frames or []
         self.st = st
         self.barge_s = (barge_ms / 1000.0) if barge_ms else None
@@ -245,6 +259,41 @@ class Locutor:
         self._episodio = 0.0
         self.v_ini, self.v_fin = voz_span(self.sp) if self.sp else (0, 0)   # [M1]
         st["ttfab_perdidos"] = 0
+        # [M1b] turnos por respuesta del bot
+        self.espera = espera if self.sp else None
+        self._esperando_desde = None
+        self._primera_en = None
+        if self.espera:
+            self._retraso = (offset % self.periodo) * FRAME_S
+            self.k = len(self.sp)                            # arranca esperando
+            st["sin_respuesta"] = 0
+            st["espera_max"] = 0
+
+    def _puede_hablar(self, ahora):
+        """[M1b] ¿Ya puede empezar la frase siguiente?"""
+        e = self.espera
+        if self._esperando_desde is None:
+            self._esperando_desde = ahora
+        if ahora - self._esperando_desde >= e["max_s"]:
+            self.st["espera_max"] += 1                       # el bot no calla: le hablo encima
+            return True
+        if ahora - self.st.get("bot_ultimo", 0.0) < e["hueco_s"]:
+            return False                                     # el bot habla o acaba de callar
+        utt_fin = self.st.get("utt_fin")
+        if utt_fin is None:                                  # primera frase: retraso inicial
+            if self._primera_en is None:
+                self._primera_en = ahora + self._retraso
+            return ahora >= self._primera_en
+        desde = self.st.get("bot_desde", 0.0)
+        if desde > utt_fin:                                  # respondió a mi última frase
+            if self.st.get("audio_done_t", 0.0) > desde:
+                return True                                  # ...y terminó (AgentAudioDone)
+            # sin AgentAudioDone (p. ej. un corte): basta un silencio largo
+            return ahora - self.st.get("bot_ultimo", 0.0) >= e["silencio_s"]
+        if ahora - utt_fin >= e["sin_resp_s"]:
+            self.st["sin_respuesta"] += 1                    # no respondió: sigo
+            return True
+        return False
 
     def siguiente(self):
         if not self.sp:
@@ -261,13 +310,22 @@ class Locutor:
                     self.cortes += 1
                     self.st["barge_t"] = ahora               # [M1] sale ya, en este paquete
                     self.st["corte_abierto"] = True
+                    self._esperando_desde = None             # [M1b]
                     self._nueva_frase()
+        if self.espera and self.k >= len(self.sp):           # [M1b] esperando al bot
+            if not self._puede_hablar(time.perf_counter()):
+                return SILENCE_FRAME
+            self.k = 0
+            self._esperando_desde = None
         if self.k == 0:
             self._nueva_frase()
         f = self.sp[self.k] if self.k < len(self.sp) else SILENCE_FRAME
         if self.k == self.v_fin:
             self.st["utt_fin_pendiente"] = True              # [M1] último frame con voz
-        self.k = (self.k + 1) % self.periodo
+        if self.espera:
+            self.k += 1                                      # [M1b] al llegar al final, espera
+        else:
+            self.k = (self.k + 1) % self.periodo
         return f
 
     def _nueva_frase(self):
@@ -355,6 +413,8 @@ async def drain(ws, stats, out=None, sid="", role="", capture_text=False):
                     parsed = {}
                     t = "_unparsable"
                 stats["in_msgs"][t] = stats["in_msgs"].get(t, 0) + 1
+                if t == "AgentAudioDone":
+                    stats["audio_done_t"] = time.perf_counter()   # [M1b]
                 if t == "AgentAudioDone" and stats.get("corte_abierto"):
                     stats["corte_natural"] = True     # [M1] el bot terminó su frase
                 # Opt-in: las transcripciones pueden contener datos de una
@@ -396,7 +456,10 @@ async def session(sid, role, url, start_delay, stop_at, fps, args, out, summary,
     st = {"in_bytes": 0, "in_msgs": {}, "frames": 0, "packets": 0}
     summary[sid] = st
     pause_frames = int(args.pause_s / FRAME_S)
-    loc = Locutor(speech_frames, pause_frames, cycle_offset, barge_ms, st)
+    espera = ({"hueco_s": args.hueco_ms / 1000.0, "sin_resp_s": args.sin_respuesta_s,
+               "silencio_s": args.silencio_s, "max_s": args.espera_max_s}
+              if args.espera_bot and role == "load" else None)          # [M1b]
+    loc = Locutor(speech_frames, pause_frames, cycle_offset, barge_ms, st, espera)
     try:
         async with connect(url, open_timeout=30, close_timeout=5, max_size=2**22,
                            ping_interval=20, ping_timeout=20,
@@ -476,6 +539,8 @@ async def session(sid, role, url, start_delay, stop_at, fps, args, out, summary,
                     f"|packet_ms={frames_por_paquete * 20 if role == 'load' else 20}"
                     + (f"|marca={marca}" if marca else "")
                     + f"|ttfab_perdidos={st.get('ttfab_perdidos', 0)}"
+                    + (f"|espera_bot=si|sin_respuesta={st.get('sin_respuesta', 0)}"
+                       f"|espera_max={st.get('espera_max', 0)}" if espera else "")
                     + (f"|interrumpe=si|cortes={loc.cortes}" if barge_ms
                        else "|interrumpe=no"))  # validez T-D1b: hubo turnos
     except ConnectionClosed as e:
@@ -519,6 +584,18 @@ async def main():
                          "cada marca reciba una mezcla de los dos comportamientos")
     ap.add_argument("--pause-s", type=float, default=8.0,
                     help="silencio entre utterances (deja terminar la respuesta TTS)")
+    ap.add_argument("--espera-bot", action="store_true",
+                    help="[M1b] cada frase espera a que el bot termine su respuesta "
+                         "(AgentAudioDone + --hueco-ms sin audio) en vez de seguir un "
+                         "horario fijo; --pause-s sólo fija el desfase inicial")
+    ap.add_argument("--hueco-ms", type=float, default=800,
+                    help="[M1b] silencio del bot, tras AgentAudioDone, antes de hablar")
+    ap.add_argument("--silencio-s", type=float, default=3.0,
+                    help="[M1b] sin AgentAudioDone, silencio del bot que cuenta como fin")
+    ap.add_argument("--sin-respuesta-s", type=float, default=10.0,
+                    help="[M1b] si el bot no empieza a responder en N s, sigue (perdido)")
+    ap.add_argument("--espera-max-s", type=float, default=60.0,
+                    help="[M1b] si el bot no calla en N s, le habla encima")
     ap.add_argument("--capture-text", action="store_true",
                     help="guarda ConversationText en el TSV para validar P0; puede "
                          "contener transcripciones, por eso es opt-in")
@@ -544,6 +621,7 @@ async def main():
     print(f"[td1] start_utc={datetime.now(timezone.utc).isoformat()} load={args.sessions} "
           f"ctrl={args.controls} ramp={args.ramp}s hold={args.hold}s [{mode}] "
           f"packet_ms={args.packet_ms} proxy={'env' if args.proxy_headers else 'none'} "
+          f"turnos={'espera-bot' if args.espera_bot else 'reloj'} "
           f"out={args.out}", flush=True)
 
     loop = asyncio.get_running_loop()
