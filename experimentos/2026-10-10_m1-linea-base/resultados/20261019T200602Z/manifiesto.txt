@@ -1,0 +1,36 @@
+# manifiesto — 2026-10-10_m1-linea-base — 20261019T200602Z
+fecha_utc=20261019T200602Z
+host=ip-172-31-7-92
+forzado=0
+sesiones_activas_al_inicio=0
+
+## este repo
+repo_commit=4689f38e0c1330e9bdda73e923b6bdcabf4d7eba
+repo_rama=paso/m1-linea-base
+repo_sucio=no
+
+## GoldenBridge
+gb_dir=/srv/GoldenBridge
+gb_commit=fb8a3b97fc0f10c14be6df5eb19d369d747dc70a
+gb_rama=HEAD
+gb_sucio=si
+gb_config=/home/eraxiom/m1_base.yaml
+gb_config_sha256=15507f5f7f94ba799aef36a4025797b93923ee7c5674dc2372743ba54516b632
+gb_imagen=goldenbridge:remarcacion-v1-jef-fp32
+gb_imagen_id=sha256:8485ac9f48d033822443333d6c333d8c259b0bedc2e6237da75e653bf67f47af
+
+## máquina
+kernel=6.8.0-1066-aws
+cpu_modelo=Intel(R) Xeon(R) Platinum 8488C
+cpu_logicas=16
+cpu_disponibles=16
+avx512_vnni=si
+mem_total_kb=32311216
+loadavg_inicio=0.00 0.01 0.00
+
+## entorno de hilos (deben ser 1 en GoldenBridge)
+GB_ORT_INTRA_OP=<no definida en este shell>
+OMP_NUM_THREADS=<no definida en este shell>
+OPENBLAS_NUM_THREADS=<no definida en este shell>
+estado_salida=0
+loadavg_fin=0.26 0.17 0.07

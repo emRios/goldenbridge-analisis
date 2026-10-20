@@ -1,0 +1,21 @@
+## M1 · parámetros
+gb_imagen=goldenbridge:remarcacion-v1-jef-fp32 (sha256:8485ac9f48d033822443333d6c333d8c259b0bedc2e6237da75e653bf67f47af)
+smart_model=/app/smart-turn/smart-turn-v3.2-gpu.onnx
+escalera=10
+reps=1
+packet_ms=60
+midspeech_n=17
+ramp_s=60
+warmup_s=60
+estable_s=120
+pausa_s=8
+speech=/srv/GoldenBridge/tools/loadtest/utterances/listos
+speech_sha256=973c20f59d9e46955fdaa70aa01d0f4ca066c51ab45310dbfeab26ec85b149c4
+gb_cpus=8
+gb_cpuset=2-5,10-13
+cliente_cpuset=6,14
+cliente_py=/srv/GoldenBridge/.venv_314/bin/python (Python 3.14.7)
+cliente_sha256=61723fc24cc7692c39b02cb04c48b6a60c991d63fdc82e8f9306a41abe7fd185
+config_base=/home/eraxiom/m1_base.yaml
+config_lab_sha256=186000c547f567aa24fd304c1cd84ecf65420ba88d5d776a346a7b255ea144b0
+credenciales=GOTENKS_API_KEY URSULA_API_KEY CEREBRAS_API_KEY (de /srv/GoldenBridge/.env)
