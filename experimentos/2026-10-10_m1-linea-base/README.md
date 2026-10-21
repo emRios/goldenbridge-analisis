@@ -38,7 +38,7 @@ Sólo **N**: 10 → 25 → 50 → 75 → 100 llamadas vivas. Imagen, config, CPU
 |---|---|---|
 | `cp_cycle_p90_med` / `_p90` | mediana y p90 de los p90 por ventana de 5 s del ciclo por lote (pre + submit + job + resume + post) | CYCLE-PROBE |
 | `cp_resume_vad_p90_*`, `cp_submit_*`, `cp_job_*` | las fases que en la curva histórica crecen ×35 frente al trabajo ×2,9 | CYCLE-PROBE |
-| `cp_fpc_med` | tramas por ciclo; a 60 ms el mínimo es 3 | CYCLE-PROBE |
+| `cp_fpc_med` | mensajes por lote (una "trama" del probe es un mensaje: 480 muestras a 60 ms); el mínimo de un lote es 2. Sólo ve ciclos por lote (cota superior de cobertura 0,5-5 % a 60 ms), ver `AUDITORIA_20261019.md` hecho A | CYCLE-PROBE |
 | `ping_ctrl_p50/p99` | RTT de las sesiones de control: retraso del loop que **no** pasa por el pool | cliente |
 | `ttfab_p50/p90/p99` | fin de la voz del usuario → primer audio del bot (E2E, incluye proveedores) | cliente |
 | `ttfab_perdidos` | frases que terminaron sin respuesta antes de la siguiente | cliente |
@@ -68,9 +68,22 @@ Un escalón de 10 llamadas, 2 min estables, imagen `goldenbridge:remarcacion-v1-
 
 - **Válido:** `gen_lag_p99_max` 2 ms, 0 muertes, 13/13 aplicadas, cpuset `2-5,10-13` leído de vuelta, `ping_ctrl_p99` 3 ms.
 - **No sano por el criterio 1:** `cp_cycle_p90_med` 6,6 > 5 ms. Pero submit 0,4 · resume 0,3 · post 0,2 ms: el ciclo es casi todo `job` (5,8 ms) con ~9 tramas por lote (`cp_fpc_med` 9,03). El criterio de 5 ms se pensó por mensaje y CYCLE-PROBE mide por lote `[INFERIDO]`. **`[ABIERTO]` qué hacer con el criterio 1: decisión del dueño, no se cambia aquí.**
-- **Trabajo por trama ≈ 0,64 ms** (la regresión histórica da 0,25) y `cpu_por_llamada` 0,038 (histórico 0,022). Candidatos `[INFERIDO]`, cada uno de una variable: `noisereduce` ahora corre (lotes de ~180 ms superan su guarda de 100 ms) · hilos de ORT en 1.
+- ~~Trabajo por trama ≈ 0,64 ms~~ **Error de unidades** (auditoría, afirmación 10): 0,64 ms es por mensaje de 60 ms; por 20 ms de audio es ≤ ~0,27 ms (cota), en el orden de la regresión histórica; el costo exacto queda `[ABIERTO]`. `noisereduce` nunca corre: su guarda es de 800 muestras por trama (auditoría, hecho F).
 - **El perfil por reloj midió interrupciones, no turnos:** 147 `Turn close` para ~148 frases, pero **90 `Barge-in triggered`, de los que sólo 28 fueron intencionales**. ~6 de cada 10 frases empezaron con el bot todavía hablando (primer audio ~1,6 s + respuestas de 4-10 s > pausa de 8 s). De ahí `ttfab_perdidos` 55, 69 `speak` contra 28 `audio_done`. Por eso desde ese día `TURNOS=espera` es el default (cliente `[M1b]`, validado en local, ver `cliente/PROCEDENCIA.txt`).
 - `[ABIERTO]` el corte de ~2 s (`corte_p50` 2.042 ms) en las interrupciones intencionales: se vuelve a medir con el perfil corregido.
+
+## Escaleras del 2026-10-19 · 60 ms contra 20 ms (una repetición cada una)
+
+`resultados/20261019T210000Z/` (60 ms, `MIDSPEECH_N=17`) y `resultados/20261019T230125Z/` (20 ms, `MIDSPEECH_N=51`; los dos ≈ 1 s entre chequeos). Auditoría y validación: `AUDITORIA_20261019.md`, `VALIDACION_CODEX_20261020.md`. El coalescer del engine real se validó aparte: 480 B por mensaje, huecos de 60-62 ms `[MEDIDO]` (`gb-rem-jef`, 2026-10-19 22:34-22:36 UTC).
+
+| N=100 | 20 ms | 60 ms |
+|---|---|---|
+| CPU (núcleos) | 4,48 | **3,30** (−26 %) |
+| `ping_ctrl_p99` | 32 ms | **14 ms** |
+| `corte_p90` | 6.190 ms | **2.233 ms** |
+| `ttfab_p50` | **2.992 ms** | 4.126 ms |
+
+**Conclusión `[MEDIDO]`, una repetición:** el coalescer a 60 ms reduce la carga del event loop y mejora las llamadas (CPU, atraso, corte). A 100 llamadas el primer audio lo limita otro cuello, común a los dos brazos: ~12-13 inferencias de smart-turn/s por proceso. K₆₀ = 10 y a 20 ms ninguno por los criterios preregistrados. Faltan las 3 repeticiones.
 
 ## Lo que esta versión NO cumple de la estrategia — `[ABIERTO]`
 
@@ -78,6 +91,7 @@ Un escalón de 10 llamadas, 2 min estables, imagen `goldenbridge:remarcacion-v1-
 2. **CYCLE-PROBE mide desde que el lote empieza, no desde la lectura del socket** (§3 pedía "desde la lectura del socket"). La espera en la cola de entrada antes del lote no está en `cp_*`; la ve sólo el `ping_ctrl` de manera indirecta. Instrumentar la lectura del socket es un parche a GB que no está hecho.
 3. **`corte` supone que GB manda el audio del bot a ritmo real.** Si lo manda en ráfagas más rápidas que tiempo real, el último audio llega antes de la interrupción y `corte` sale chico aunque no haya corte. No está verificado en el código. Se lee junto con `fin=natural`: si llegó `AgentAudioDone`, el bot terminó su frase.
 4. **`active.yaml` es de `f261`, el código es `api`.** Claves que `api` no conoce se ignoran o fallan al arrancar `[ABIERTO]`. El arranque se aborta si no hay "referencia OK" o si algún proveedor queda "not available". Los valores efectivos se leen en `gb.log` (líneas `Silero VAD initialized` y `Smart Turn VAD processor initialized`).
+5. **El criterio 1 usa CYCLE-PROBE, que sólo ve ciclos por lote** (≥ 2 mensajes en cola y sin TTS): no mide la latencia por mensaje que el criterio supone. `[ABIERTO]` decisión del dueño. Mientras tanto, la rodilla se lee en `ping_ctrl`, `ttfab` y `corte`, no en `cp_*`.
 
 ## Costo y duración `[INFERIDO]`
 
