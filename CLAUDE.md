@@ -98,10 +98,20 @@ tramo engine⇄GB pasa de loopback a red pública. Con el smart-turn cuantizado
   con un solo conflicto (`config/default.yaml`). Imagen
   `goldenbridge:remarcacion-v1-fp32` `[ABIERTO]` sin construir.
   Procedimiento en `prompts/PROMPT_imagen_docker_goldenbridge_20261016.md`.
-- **M1** (la línea base del sistema actual a 60 ms, escalera 10-100) está en
-  la rama `paso/m1-linea-base`, **sin correr**. Debe correrse con la imagen
-  fp32: cambiar `GB_IMAGEN` y el `model_path` que su `correr.sh` fuerza a
-  `cpu.onnx`; usa el puerto 8776, igual que el contenedor de prueba.
+- `[MEDIDO 2026-10-19/20]` **M1 (línea base del sistema actual) corrida a 60 y a 20 ms**,
+  una repetición, N 10-100, imagen `goldenbridge:remarcacion-v1-jef-fp32`, proveedores
+  reales, cliente que espera la respuesta del bot. Detalle en
+  `experimentos/2026-10-10_m1-linea-base/AUDITORIA_20261019.md` (+ validación de Codex).
+  **El coalescer a 60 ms reduce la carga del event loop y mejora las llamadas:** −22 a −32 %
+  de CPU por llamada; a N=100, `ping_ctrl_p99` 14 contra 32 ms y corte 2,2 contra 6,2 s. El
+  loop no se atrasa, pero cada sesión acumula mientras espera su smart-turn (`inbox` mediano 28).
+  **Los dos brazos chocan con el mismo techo:** ~7,5 cierres de turno/s y 12-13 inferencias de
+  smart-turn/s por proceso, ~0,9 s por inferencia a N=100; por eso a N=100 el `ttfab_p50` es peor
+  a 60 ms (4,1 contra 3,0 s). Mecanismo `[ABIERTO]`: el `_inference_lock` global `[CÓDIGO]` o el
+  executor por defecto (~12 hilos `[INFERIDO]`). K₆₀ = 10 y a 20 ms ninguno por los criterios.
+  CYCLE-PROBE sólo ve ciclos por lote: no sirve para la rodilla. El coalescer del engine real
+  está validado (480 B, 60-62 ms). Siguiente: 3 repeticiones a 60 ms, luego int8 contra fp32.
+  Rama `paso/m1-linea-base`.
 - **Refactor:** traspaso a una sesión nueva en
   `prompts/PROMPT_refactor_goldenbridge_20261016.md`.
 
@@ -253,8 +263,8 @@ Techos históricos: 3.11 con GIL **40-45** · 3.14t **51** · +afinidad **58**.
 - Silero es **ONNX** (`torch.hub.load(..., onnx=True)`); torch es sólo envoltorio.
 - Sesiones ORT **separadas** para Silero y smart-turn.
 - Smart-turn gateado por transición de silencio (`vad.stop_secs: 0.6`).
-- `noisereduce` corre dentro del job con guarda `MIN_CHUNK_SIZE = 100 ms`;
-  el lote p50 es 96 ms ⇒ **hoy se salta casi siempre**.
+- `noisereduce` tiene la guarda `MIN_CHUNK_SIZE` = 800 muestras **por trama**, no por lote:
+  con mensajes de 160 o 480 muestras **no corre nunca** (`[MEDIDO]` 0 cargas en 13 logs, M1 2026-10-19).
 - `max_handler_ms` **incluye los `await`** ⇒ es síntoma, no trabajo del loop.
 - `cycle_probe: false` en el repo, **`true` en el `active.yaml` desplegado**.
 
