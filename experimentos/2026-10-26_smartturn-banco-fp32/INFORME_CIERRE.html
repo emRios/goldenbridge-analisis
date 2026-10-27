@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cierre smart-turn fp32</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: informe de una columna (~70ch) con tablas y dos gráficas a ancho de columna ampliada (máx. 900px).
+   Azul = medido con fp32; verde = sin candado / en paralelo; rojo = candado y fila; gris = notas. */
+:root{
+  --bg:#f4f5f8; --surface:#ffffff; --ink:#18202b; --muted:#566275; --line:#d6dbe3; --grid:#e6e9ef;
+  --calc:#2c58d0; --par:#1d8456; --par-soft:#ddf1e6; --lock:#c42f2a; --lock-soft:#f9e0de; --warn:#b56f00; --warn-soft:#fbeed3;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e131a; --surface:#161e28; --ink:#e5eaf1; --muted:#9aa5b5; --line:#2b3542; --grid:#222b37;
+  --calc:#82a3ff; --par:#62d29c; --par-soft:#123226; --lock:#ff7b73; --lock-soft:#3f1917; --warn:#f2b545; --warn-soft:#3a2b0f; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0e131a; --surface:#161e28; --ink:#e5eaf1; --muted:#9aa5b5; --line:#2b3542; --grid:#222b37;
+  --calc:#82a3ff; --par:#62d29c; --par-soft:#123226; --lock:#ff7b73; --lock-soft:#3f1917; --warn:#f2b545; --warn-soft:#3a2b0f; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16.5px; line-height:1.6; margin:0; padding-inline:18px; padding-block:40px 80px}
+.wrap{max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:40px}
+.prose{max-width:70ch}
+h1,h2,h3{font-family:var(--f-display); line-height:1.15; margin:0; text-wrap:balance}
+h1{font-size:clamp(1.9rem,4.5vw,2.7rem); font-weight:700}
+h2{font-size:clamp(1.35rem,3vw,1.7rem); font-weight:600}
+h3{font-size:1.08rem; font-weight:600}
+p{margin:0}
+section{display:flex; flex-direction:column; gap:14px}
+.eyebrow{font-family:var(--f-mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.meta{font-size:.92rem; color:var(--muted)}
+.answer{background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--par); border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:10px}
+.tags{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 16px; font-size:.9rem; display:grid; grid-template-columns:auto 1fr; gap:4px 12px}
+.tag{font-family:var(--f-mono); font-size:.76rem; font-weight:600; white-space:nowrap}
+.tablewrap{overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:8px}
+table{border-collapse:collapse; width:100%; font-size:.92rem; font-variant-numeric:tabular-nums}
+th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); font-weight:600}
+tr:last-child td{border-bottom:none}
+td.n{text-align:right; white-space:nowrap}
+.fig{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:8px; margin:0}
+.fig svg{display:block; width:100%; height:auto}
+.cap{font-size:.88rem; color:var(--muted)}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:16px}
+.grid2>*{min-width:0}
+ul{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:6px}
+code{font-family:var(--f-mono); font-size:.84em; background:var(--grid); padding:1px 5px; border-radius:4px; word-break:break-all}
+.pill{font-family:var(--f-mono); font-size:.74rem; padding:2px 8px; border-radius:999px; border:1px solid; white-space:nowrap}
+.ok{color:var(--par); border-color:var(--par); background:var(--par-soft)}
+.no{color:var(--lock); border-color:var(--lock); background:var(--lock-soft)}
+.ab{color:var(--warn); border-color:var(--warn); background:var(--warn-soft)}
+svg text{fill:var(--ink); font-family:var(--f-body); font-size:12.5px}
+svg .xs{font-size:10.5px} svg .mut{fill:var(--muted)} svg .tl{fill:var(--lock)} svg .tp{fill:var(--par)}
+svg .grid{stroke:var(--grid); stroke-width:1} svg .axis{stroke:var(--muted); stroke-width:1}
+svg .lp{stroke:var(--par); stroke-width:2.4; fill:none} svg .ll{stroke:var(--lock); stroke-width:2.4; fill:none} svg .lm{stroke:var(--muted); stroke-width:1.6; fill:none; stroke-dasharray:5 4}
+svg .fp{fill:var(--par)} svg .fl{fill:var(--lock)} svg .fc{fill:var(--calc)}
+@media print{ body{background:#fff; padding:0} .fig,.tablewrap,.answer,.tags{break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <div class="eyebrow">GoldenBridge · motor nuevo · informe de cierre · 2026-10-27</div>
+  <h1>Política de smart-turn fp32: lo que dicen dos pruebas</h1>
+  <p class="meta">Pruebas corridas en el servidor DEV <code>.143</code> (Xeon 8488C). Sin commit en el repositorio hasta la aprobación del dueño.</p>
+</header>
+
+<div class="tags" aria-label="Etiquetas">
+  <span class="tag">[MEDIDO]</span><span>medido en una corrida, con la ruta de su manifiesto en la sección Fuentes.</span>
+  <span class="tag">[CÓDIGO]</span><span>leído en el código de GoldenBridge.</span>
+  <span class="tag">[INFERIDO]</span><span>deducido de lo medido, sin medirlo directo.</span>
+  <span class="tag">[ABIERTO]</span><span>sin resolver.</span>
+</div>
+
+<section>
+  <div class="eyebrow">Resumen</div>
+  <div class="answer">
+    <p><b>El techo de smart-turn lo pone el tiempo de cada cálculo, porque GoldenBridge los hace de uno en uno detrás de un candado.</b> <span class="tag">[MEDIDO]</span> Con un cálculo más corto, la fila desapareció a 100 llamadas.</p>
+    <p><b>El mismo modelo fp32 puede hacer 4 cálculos a la vez sobre una sola copia, sin cambiar ninguna decisión.</b> <span class="tag">[MEDIDO]</span> En el servidor de pruebas eso da 57,7 decisiones por segundo con la carga del detector de voz de 100 llamadas al lado, contra ~14 de GoldenBridge hoy.</p>
+    <p><b>Propuesta para el motor nuevo:</b> <span class="tag">[INFERIDO]</span> una copia compartida del modelo, sin candado, con tantos cálculos a la vez como núcleos físicos, y un hilo por cálculo. Capacidad prevista = cálculos a la vez ÷ tiempo de cada cálculo.</p>
+  </div>
+  <p class="prose meta">Palabras usadas: <b>smart-turn</b> es el modelo que decide si la persona terminó de hablar; un <b>cálculo</b> es una de esas decisiones; el <b>candado</b> es la regla de GoldenBridge que deja calcular a uno solo a la vez; un <b>hilo</b> es una línea de trabajo del programa; un <b>núcleo físico</b> es un procesador real, y el servidor de pruebas tiene 4 de ellos para estas pruebas, que el sistema muestra como 8.</p>
+</section>
+
+<!-- ===== PRUEBA 1 ===== -->
+<section>
+  <div class="eyebrow">Prueba 1 · 2026-10-27 01:13-03:52 UTC</div>
+  <h2>¿El techo lo pone el tiempo de cada cálculo?</h2>
+  <p class="prose"><b>Cómo se hizo.</b> GoldenBridge completo, con 50, 75 y 100 llamadas simuladas. Los proveedores de transcripción, respuesta y voz se reemplazaron por imitaciones locales sin costo. Se cambió una sola cosa: el archivo del modelo. El fp32 tarda ~48-60 ms por cálculo; el int8 es más rápido. El int8 se usó sólo como palanca para acortar el cálculo; no es candidato porque Modal no garantiza el procesador que necesita. Cuatro corridas alternadas: fp32, int8, fp32, int8, en los dos órdenes de carga.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>A 100 llamadas <span class="tag">[MEDIDO]</span></th><th class="n">fp32 (2 corridas)</th><th class="n">int8 (2 corridas)</th></tr></thead>
+    <tbody>
+      <tr><td>Espera + cálculo de cada decisión, mediana</td><td class="n">857-858 ms</td><td class="n">67-68 ms</td></tr>
+      <tr><td>El más rápido de todos</td><td class="n">819-820 ms</td><td class="n">39 ms</td></tr>
+      <tr><td>Decisiones por segundo</td><td class="n">13,9</td><td class="n">16,0-16,1</td></tr>
+      <tr><td>Turnos cerrados por segundo</td><td class="n">7,2-7,3</td><td class="n">9,9</td></tr>
+    </tbody></table></div>
+  <p class="prose"><b>Veredicto preregistrado: EFECTO.</b> Las dos corridas int8 quedaron por debajo del rango de las dos fp32. Codex recalculó los números desde los registros sin conocer la hipótesis y los confirmó.</p>
+  <p class="prose"><b>Corrección de lectura.</b> A 100 llamadas el fp32 hace más decisiones por turno, 1,68 contra 1,53. A 50 llamadas, donde no hay fila en ningún modelo, casi coinciden: 1,52 contra 1,49. La diferencia viene de la espera, no de que el int8 decida distinto <span class="tag">[MEDIDO]</span> <span class="tag">[INFERIDO]</span>. Los cierres por respaldo son la excepción: el fp32 ya tiene ~75 a 50 llamadas y el int8 ninguno. Son el 2-3 % de los turnos.</p>
+  <p class="prose meta">Límites: con imitaciones de los proveedores no vale como cifra absoluta para Modal. Separa "el cálculo fija el techo", no "el candado o el grupo de hilos": eso lo responde la prueba 2.</p>
+</section>
+
+<!-- ===== PRUEBA 2 ===== -->
+<section>
+  <div class="eyebrow">Prueba 2 · banco fp32 · 2026-10-27 14:28-15:36 UTC</div>
+  <h2>¿Cuántos cálculos a la vez, con qué copia y a qué costo?</h2>
+  <p class="prose"><b>Cómo se hizo.</b> Smart-turn fp32 llamado directamente, sin GoldenBridge, dentro de la misma imagen y con la misma configuración: un hilo por cálculo. En 4 núcleos físicos. Cuatro series, 51 condiciones de 60 s, 3 repeticiones cada una, todas válidas <span class="tag">[MEDIDO]</span>. Cada respuesta en paralelo se comparó con la calculada de una en una.</p>
+
+  <div class="grid2">
+    <figure class="fig"><h3>Decisiones por segundo según cálculos a la vez</h3>
+      <svg id="g1" viewBox="0 0 420 260" role="img" aria-label="Capacidad con 1, 2, 4 y 8 cálculos a la vez"></svg>
+      <figcaption class="cap"><span class="tag">[MEDIDO]</span> La línea punteada es lo ideal. Con 4 se logra el 89 %. Con 8 no se gana nada: son 4 núcleos físicos y cada cálculo pasa a tardar el doble, 125 ms.</figcaption></figure>
+    <figure class="fig"><h3>Espera cuando los pedidos llegan al azar</h3>
+      <svg id="g2" viewBox="0 0 420 260" role="img" aria-label="Espera mediana según el ritmo de llegada, 1 y 4 hilos"></svg>
+      <figcaption class="cap"><span class="tag">[MEDIDO]</span> Mediana de espera más cálculo. El ritmo es un porcentaje de lo que aguanta cada configuración: 17,7/s con 1 hilo y 63,3/s con 4.</figcaption></figure>
+  </div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Criterio preregistrado</th><th>Regla</th><th>Resultado <span class="tag">[MEDIDO]</span></th></tr></thead>
+    <tbody>
+      <tr><td>Mismas decisiones</td><td>diferencia ≤ 0,000001 y ninguna decisión cambiada</td><td><span class="pill ok">cumple</span> diferencia 0 en las 51</td></tr>
+      <tr><td>Escala con 2 / 4 / 8</td><td>≥ 80 % de lo ideal</td><td><span class="pill ok">97 %</span> <span class="pill ok">89 %</span> <span class="pill no">45 %</span></td></tr>
+      <tr><td>Mejor cantidad a la vez</td><td>mayor capacidad; si hay empate a 5 %, la menor</td><td><b>4</b>: 63,3/s</td></tr>
+      <tr><td>Copia del modelo</td><td>compartida salvo que una por hilo dé ≥ 5 % más</td><td><b>compartida</b>: 63,6/s y 56 MB, contra 63,0/s y 170 MB</td></tr>
+      <tr><td>Con el detector de voz al lado</td><td>se reporta</td><td>25 / 50 / 100 llamadas: 63,6 / 65,6 / 69,1 ms por cálculo; 62,3 / 60,7 / 57,7 decisiones/s</td></tr>
+      <tr><td>Contraste con los ~72 ms deducidos</td><td>a 100 llamadas</td><td><span class="pill ab">compatible, no probado</span> 69,1 ms, pero la carga simulada fue el 38 % de la de GoldenBridge</td></tr>
+      <tr><td>Sin hilos girando en reposo</td><td>≤ 1 % de un núcleo</td><td><span class="pill ok">cumple</span> 0 %</td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ===== POLITICA ===== -->
+<section>
+  <div class="eyebrow">Para el motor nuevo <span class="tag">[INFERIDO]</span></div>
+  <h2>Política propuesta y su cuenta</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Decisión</th><th>Propuesta</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td>Cálculos a la vez</td><td>uno por núcleo físico disponible para smart-turn</td><td>escala hasta los núcleos físicos; más hilos sólo alargan cada cálculo</td></tr>
+      <tr><td>Copia del modelo</td><td>una sola, compartida, sin candado</td><td>mismo rendimiento, un tercio de la memoria, decisiones idénticas</td></tr>
+      <tr><td>Hilos por cálculo</td><td>1, como hoy</td><td>sin hilos girando en reposo; resultados deterministas</td></tr>
+      <tr><td>Carga de trabajo</td><td>hasta ~90 % de la capacidad</td><td>al 90 % la mitad de los pedidos espera ≤ 89 ms con 4 hilos; al 100 %, 208 ms</td></tr>
+    </tbody></table></div>
+  <p class="prose"><b>La cuenta.</b> Decisiones por segundo ≈ cálculos a la vez ÷ tiempo de cada cálculo. Con 4 núcleos y el detector de voz de 100 llamadas al lado: 4 ÷ 0,069 s ≈ 58 decisiones/s, que es lo medido, 57,7. A ~1,6 decisiones por turno y ~0,07-0,1 turnos por segundo por llamada, eso alcanza para varios cientos de llamadas en la parte de smart-turn <span class="tag">[INFERIDO]</span>. El límite del motor lo pondrá otra pieza antes que smart-turn.</p>
+</section>
+
+<!-- ===== ABIERTO ===== -->
+<section>
+  <div class="eyebrow">Lo que queda abierto <span class="tag">[ABIERTO]</span></div>
+  <ul class="prose">
+    <li><b>El procesador de Modal.</b> Todo se midió en un Xeon 8488C. El banco registra el modelo de CPU y debe correrse también en un contenedor de Modal.</li>
+    <li><b>Tiempo aislado del cálculo.</b> El banco da 56-62 ms; la medida del 14 de octubre dio 47,6 ms con otra imagen y otro script. Falta explicar la diferencia.</li>
+    <li><b>El resto de la carga.</b> El banco simuló sólo el detector de voz, 1,2 de los ~3,2 núcleos que usa GoldenBridge a 100 llamadas.</li>
+    <li><b>La preparación del audio.</b> Se midió en Python, 2,6 ms por pedido. En el motor nuevo será C++ y hay que medirla allí.</li>
+    <li><b>El siguiente cuello.</b> Cuando smart-turn dejó de hacer fila en la prueba 1, subieron la espera antes de la voz del bot, de 64 a 474 ms en el 90 % de los turnos, y la carga del bucle principal. La síntesis de voz y el reparto del audio son los candidatos.</li>
+    <li><b>Calidad de decisiones.</b> Ninguna prueba mide si las decisiones son buenas; sólo que no cambian al calcular en paralelo.</li>
+  </ul>
+</section>
+
+<!-- ===== FUENTES ===== -->
+<section>
+  <div class="eyebrow">Fuentes</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Prueba</th><th>Rama y carpeta</th><th>Corridas, cada una con <code>manifiesto.txt</code></th></tr></thead>
+    <tbody>
+      <tr><td>1 · fp32 contra int8 con imitaciones de proveedores</td><td><code>paso/m1-linea-base</code> · <code>experimentos/2026-10-27_m1s-smartturn-int8-fp32-mocks/</code> (README, RESULTADOS.md)</td><td><code>resultados/20261027T012224Z</code>, <code>…015959Z</code>, <code>…023736Z</code>, <code>…031510Z</code>; control <code>…011336Z</code></td></tr>
+      <tr><td>2 · banco fp32</td><td><code>paso/smartturn-banco</code> · <code>experimentos/2026-10-26_smartturn-banco-fp32/</code> (README, banco.py, analiza.py, run.sh)</td><td><code>resultados/20261027T142841Z</code> (resumen.md, resumen.tsv)</td></tr>
+      <tr><td>Línea base con proveedores reales</td><td><code>paso/m1-linea-base</code> · <code>experimentos/2026-10-10_m1-linea-base/</code></td><td><code>resultados/20261019T210000Z</code></td></tr>
+    </tbody></table></div>
+  <p class="meta">Imagen de las dos pruebas: <code>goldenbridge:remarcacion-v1-jef-fp32</code> (<code>sha256:8485ac9f…</code>). Modelo fp32: <code>smart-turn-v3.2-gpu.onnx</code> (<code>sha256:ab8dc64b…</code>). ONNX Runtime 1.24.4, Python 3.14 sin GIL.</p>
+</section>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(t,a,p,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(x!==undefined)e.textContent=x;if(p)p.appendChild(e);return e;};
+  const fmt=v=>String(v).replace(".",",");
+  (function(){const svg=document.getElementById("g1"),W=420,H=260,m={l:46,r:14,t:20,b:40};
+    const P=[1,2,4,8],v=[17.7,34.4,63.3,63.2],x=p=>m.l+(P.indexOf(p)+.5)/4*(W-m.l-m.r),y=d=>H-m.b-d/150*(H-m.t-m.b);
+    [0,50,100,150].forEach(t=>{el("line",{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:"grid"},svg);el("text",{x:m.l-6,y:y(t)+4,"text-anchor":"end",class:"xs mut"},svg,t);});
+    P.forEach(p=>el("text",{x:x(p),y:H-m.b+16,"text-anchor":"middle",class:"xs mut"},svg,p));
+    el("text",{x:(m.l+W-m.r)/2,y:H-6,"text-anchor":"middle",class:"xs mut"},svg,"cálculos a la vez");
+    el("path",{d:P.map((p,i)=>(i?"L":"M")+x(p)+","+y(17.7*p)).join(" "),class:"lm"},svg);
+    el("path",{d:P.map((p,i)=>(i?"L":"M")+x(p)+","+y(v[i])).join(" "),class:"lp"},svg);
+    P.forEach((p,i)=>{el("circle",{cx:x(p),cy:y(v[i]),r:4.5,class:"fp"},svg);el("text",{x:x(p),y:y(v[i])-9,"text-anchor":"middle"},svg,fmt(v[i]));});
+  })();
+  (function(){const svg=document.getElementById("g2"),W=420,H=260,m={l:56,r:14,t:20,b:40};
+    const F=[50,75,90,100],lo=Math.log10(40),hi=Math.log10(5000),x=f=>m.l+(f-45)/(105-45)*(W-m.l-m.r),y=v=>H-m.b-(Math.log10(v)-lo)/(hi-lo)*(H-m.t-m.b);
+    [50,100,200,500,1000,2000,5000].forEach(t=>{el("line",{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:"grid"},svg);el("text",{x:m.l-6,y:y(t)+4,"text-anchor":"end",class:"xs mut"},svg,t.toLocaleString("es"));});
+    F.forEach(f=>el("text",{x:x(f),y:H-m.b+16,"text-anchor":"middle",class:"xs mut"},svg,f+" %"));
+    el("text",{x:(m.l+W-m.r)/2,y:H-6,"text-anchor":"middle",class:"xs mut"},svg,"ritmo de llegada respecto a la capacidad (ms en vertical)");
+    [["1 hilo, como hoy","ll","fl","tl",[64.1,131.0,827.0,3554.6]],["4 hilos sin candado","lp","fp","tp",[61.5,63.3,89.3,207.7]]].forEach(([n,lc,fc,tc,d],k)=>{
+      el("path",{d:F.map((f,i)=>(i?"L":"M")+x(f)+","+y(d[i])).join(" "),class:lc},svg);
+      F.forEach((f,i)=>el("circle",{cx:x(f),cy:y(d[i]),r:4,class:fc},svg));
+      el("text",{x:x(100)-6,y:y(d[3])+(k?16:-8),"text-anchor":"end",class:"xs "+tc},svg,n+": "+fmt(Math.round(d[3]))+" ms");});
+  })();
+})();
+</script>
+
+</body>
+</html>

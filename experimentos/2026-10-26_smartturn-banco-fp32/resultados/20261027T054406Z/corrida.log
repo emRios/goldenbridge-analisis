@@ -1,0 +1,4 @@
+[banco 05:44:06] manifiesto: /home/eraxiom/goldenbridge-analisis-banco/experimentos/2026-10-26_smartturn-banco-fp32/resultados/20261027T054406Z/manifiesto.txt
+[banco 05:44:06] condición corta_A_p1: --serie A --p 1
+[banco] A P=1 compartida silero=0 tasa=0.0 · válido=True  · caudal 16.0/s · Run p50 62.6 p90 63.6 p99 64.5 ms · paridad máx 0.00e+00 volteos {'0.35': 0, '0.85': 0} · reposo 0.00 % · núcleos 1.00
+[banco 05:44:28] listo: /home/eraxiom/goldenbridge-analisis-banco/experimentos/2026-10-26_smartturn-banco-fp32/resultados/20261027T054406Z/resumen.md

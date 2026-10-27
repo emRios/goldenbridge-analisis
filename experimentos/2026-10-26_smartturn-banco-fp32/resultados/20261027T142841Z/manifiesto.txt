@@ -1,0 +1,22 @@
+# manifiesto — 2026-10-26_smartturn-banco-fp32 — 20261027T142841Z
+fecha_utc=20261027T142841Z
+host=ip-172-31-7-92
+repo_commit=2503c3f8d7d5053c747f0b64dcfa4e1e4666a8fc
+repo_rama=paso/smartturn-banco
+repo_sucio=si
+banco_sha256=11cc9ebe940371c1615458038cff3804cb3abad173d7df9b111b595a2bda440d
+analiza_sha256=93dec5c1db935d782f390391d399cee0018c20cd5a9dfca53173f7de89233c22
+gb_imagen=goldenbridge:remarcacion-v1-jef-fp32
+gb_imagen_id=sha256:8485ac9f48d033822443333d6c333d8c259b0bedc2e6237da75e653bf67f47af
+cpuset=2-5,10-13
+reps=3
+calentar_s=10
+medir_s=60
+series=A B C D
+audios=/srv/GoldenBridge/tools/loadtest/utterances
+audios_sha256=500439f8a14d30834ec3f4cfcbac96e74ab7f04b73a31d6ab26be41ec6596038
+cpu_modelo=Intel(R) Xeon(R) Platinum 8488C
+avx512_vnni=si
+loadavg_inicio=0.06 0.02 0.00
+contenedores_vivos=ai_engine lasik-scheduler-1 lasik-app-1 
+loadavg_fin=2.87 2.73 2.49

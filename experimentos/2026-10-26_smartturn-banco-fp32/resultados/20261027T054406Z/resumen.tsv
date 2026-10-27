@@ -1,0 +1,2 @@
+serie	p	sesiones	silero	tasa	reps	caudal	run_p50	run_p90	run_p99	cpu_p50	esp_p50	esp_p90	esp_p99	paridad_max	volteos	nucleos	silero_nucleos	mem_mb
+A	1	compartida	0	0.0	1	15.990427260354263	62.552171999413986	63.641621003625914	64.53253700601636	62.54413999999997				0.0	0	1.0004011054759137		55.58203125
