@@ -40,6 +40,82 @@ por `preparar.sh` → `config/modelos_imagen.txt`.
 | Gate de arranque | `referencia OK` + `Smart Turn processor created … model_path=$SMART_MODEL` | igual que M1 |
 | Ventana | ramp 60 + warm-up 60 descartado + 600 estables (control corto: 300) | `parametros.txt` |
 
+## Las imitaciones de los proveedores (mocks)
+
+Tres servidores locales reemplazan a los workers de Modal. Están en `~/analisis_tmp/loopab/mocks/` (`mock_stt.py`,
+`mock_llm.py`, `mock_tts.py`), escuchan en `127.0.0.1` y se arrancan con `start_mocks.sh`. **No transcriben, no razonan
+ni sintetizan:** contestan con el mismo protocolo y el mismo tamaño de mensajes, con demoras fijas. GoldenBridge usa sus
+clientes de siempre, sin cambios; sólo cambian las URLs de la config.
+
+### Latencias
+
+Las imitaciones usan demoras fijas, tomadas de `start_mocks.sh` L55-57 `[CÓDIGO]`. Lo real es la mediana de M1 a 100 llamadas,
+`resultados/20261019T210000Z` `[MEDIDO]`.
+
+| Proveedor | Qué se mide | Imitación | Real |
+|---|---|---|---|
+| STT | de la orden de cerrar (Finalize) al texto | 130 ms | 122 ms |
+| LLM | primera palabra | 400 ms | 254 ms |
+| LLM | resto de la respuesta | 16 palabras, una cada 15 ms: 225 ms | variable, 52 ms la mitad de las veces |
+| TTS | primer bloque de voz | 40 ms | 44 ms, pero 166-201 ms en el 10 % más lento |
+| TTS | ritmo del resto | tiempo real exacto | ~18 % más rápido que tiempo real |
+
+No se usan en esta prueba porque el laboratorio no tiene campaña: el router de intención, a 450 ms, y el detector de
+buzón, a 300 ms.
+
+Las imitaciones no tienen colas largas. Lo real llega a 3 s en el STT y varía de una llamada a otra. Esa varianza es lo
+que se quita a propósito, para que los dos brazos reciban el mismo estímulo.
+
+### ¿Usan el mismo protocolo?
+
+Sí, el que usa GoldenBridge con cada worker:
+
+| Proveedor | Cómo se conecta | Qué intercambian |
+|---|---|---|
+| STT | WebSocket `/v1/listen?language&sample_rate=16000&encoding=linear16&vad=false&token` | al conectar, un mensaje `Metadata`; GB manda audio binario PCM de 16 bits a 16 kHz y `Finalize`, `KeepAlive` o `CloseStream`; la imitación responde un `Results` con `is_final`, `speech_final` y `from_finalize` |
+| LLM | HTTP `POST /v1/chat/completions`, compatible con OpenAI | la misma forma de pedido y de respuesta en streaming (SSE) que espera el cliente de GB, terminando en `[DONE]` |
+| TTS | WebSocket persistente `/v1/tts/ws/{voz}?api_key=`, más `GET /v1/voices` | GB manda `{"text", "flush", "request_id"}`; la imitación responde bloques binarios de voz, un bloque vacío y `{"status":"complete","request_id"}` |
+
+Diferencias de transporte:
+- Las conexiones son sin cifrado (`ws://` y `http://`), porque todo va por la red local del servidor.
+- Las claves se aceptan sin validar.
+
+Diferencias de contenido:
+- **STT:** devuelve siempre una de cuatro frases fijas, "sí", "bueno", "no, gracias" y "sí, claro, dígame", y sólo si hubo
+  voz en el audio. Lo decide midiendo la energía, sin reconocer palabras.
+- **LLM:** responde siempre la misma frase, de 93 caracteres.
+
+Los tres se probaron con los clientes reales de GoldenBridge (`test_mock_stt.py`, `test_mock_llm.py`, `test_mock_tts.py`)
+`[MEDIDO 2026-10-24]`.
+
+### Cómo entrega el audio la imitación de TTS
+
+1. **Una fila por conexión.** Cada llamada tiene su WebSocket; los textos que llegan se atienden en orden, de a uno.
+2. **Genera una señal que suena a voz**, sin palabras:
+   - un tono de 180 Hz con sus armónicos y una leve variación;
+   - una envolvente de unas 5 sílabas por segundo;
+   - un poco de ruido.
+3. **El largo depende del texto:** 65 ms de audio por carácter. La respuesta fija del LLM se manda en 2 pedidos, de
+   67 y 23 caracteres: ~5,85 s de voz por turno.
+4. **Formato igual al worker real:** PCM de 16 bits, mono, a 48 kHz, en bloques de 16.384 bytes. Cada bloque son 170,7 ms
+   de audio.
+5. **Ritmo:**
+   - espera 40 ms antes del primer bloque;
+   - después manda un bloque cada 170,7 ms, contados desde el primero, sin acumular atraso.
+6. **Al terminar:** un bloque binario vacío y `{"status":"complete","request_id"}`. GoldenBridge usa el `request_id` para
+   no confundir respuestas.
+7. **Si la persona interrumpe:** la imitación sigue mandando el audio cancelado y GoldenBridge lo descarta, igual que con
+   el worker real.
+
+GoldenBridge convierte esa voz de 48 a 8 kHz y la envía a la llamada al ritmo en que se escucha.
+
+Dos diferencias con el worker real, KDVoz:
+- **El ritmo de entrega.** El real entrega ~18 % más rápido que tiempo real; el pacer de GB absorbe la diferencia.
+- **El primer bloque.** El real a veces tarda ~160 ms en lugar de ~40 ms.
+
+Detalle completo y la comparación con lo real: `/srv/memories/mocks_workers_gb/fidelidad_mocks_vs_reales.md` y
+`LEEME_HANDOFF.md` en esa misma carpeta.
+
 ## Cambios respecto a `correr.sh` de M1 (todos marcados `[MOCKS]` en `correr.sh`)
 
 1. **Script nuevo**, no edición del de M1: `correr.sh` de esta carpeta; cliente, `analiza.py` y extractor se toman de `M1_DIR` sin copiar.
