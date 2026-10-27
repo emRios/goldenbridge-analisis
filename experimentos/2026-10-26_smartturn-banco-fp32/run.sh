@@ -4,8 +4,13 @@
 #   ./run.sh                 # todo, 3 repeticiones, 10 s de calentamiento + 60 s medidos por condición
 #   SERIES="A" ./run.sh      # sólo una serie
 #   CORTA=1 ./run.sh         # validación: A con P = 1, una repetición, 2 + 10 s
+#   SERIES="A D" PA_LISTA="1 2 4" PD_LISTA="1 2 4" FRACS="0.5 0.75 0.8 0.9" ./run.sh
+#                            # serie D sobre una lista de P; P y fracciones rotan entre repeticiones
 # Variables: GB_IMAGEN (goldenbridge:remarcacion-v1-jef-fp32) · CPUSET (2-5,10-13) · AUDIOS (/srv/GoldenBridge/tools/loadtest/utterances)
 #            REPS (3) · CALENTAR (10) · MEDIR (60) · SERIES ("A B C D")
+#            PA_LISTA ("1 2 4 8")  P de la serie A
+#            PD_LISTA ("")         P de la serie D; vacía = P = 1 y el mejor P, como antes
+#            FRACS ("0.5 0.75 0.9 1.0")  fracciones de la capacidad para la serie D
 set -euo pipefail
 AQUI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(git -C "$AQUI" rev-parse --show-toplevel)"
@@ -13,6 +18,7 @@ GB_IMAGEN="${GB_IMAGEN:-goldenbridge:remarcacion-v1-jef-fp32}"
 CPUSET="${CPUSET:-2-5,10-13}"
 AUDIOS="${AUDIOS:-/srv/GoldenBridge/tools/loadtest/utterances}"
 REPS="${REPS:-3}"; CALENTAR="${CALENTAR:-10}"; MEDIR="${MEDIR:-60}"; SERIES="${SERIES:-A B C D}"
+PA_LISTA="${PA_LISTA:-1 2 4 8}"; PD_LISTA="${PD_LISTA:-}"; FRACS="${FRACS:-0.5 0.75 0.9 1.0}"
 if [ "${CORTA:-0}" = 1 ]; then REPS=1; CALENTAR=2; MEDIR=10; SERIES="CORTA"; fi
 SELLO="$(date -u +%Y%m%dT%H%M%SZ)"; SALIDA="$AQUI/resultados/$SELLO"; mkdir -p "$SALIDA"
 log() { printf '[banco %s] %s\n' "$(date -u +%H:%M:%S)" "$*" | tee -a "$SALIDA/corrida.log"; }
@@ -29,6 +35,7 @@ docker image inspect "$GB_IMAGEN" >/dev/null 2>&1 || { log "ERROR: no está la i
   echo "banco_sha256=$(sha256sum "$AQUI/banco.py" | cut -d' ' -f1)"; echo "analiza_sha256=$(sha256sum "$AQUI/analiza.py" | cut -d' ' -f1)"
   echo "gb_imagen=$GB_IMAGEN"; echo "gb_imagen_id=$(docker image inspect --format '{{.Id}}' "$GB_IMAGEN")"
   echo "cpuset=$CPUSET"; echo "reps=$REPS"; echo "calentar_s=$CALENTAR"; echo "medir_s=$MEDIR"; echo "series=$SERIES"
+  echo "pa_lista=$PA_LISTA"; echo "pd_lista=${PD_LISTA:-<1 y el mejor P>}"; echo "fracs=$FRACS"
   echo "audios=$AUDIOS"; echo "audios_sha256=$(cat "$AUDIOS"/*.wav | sha256sum | cut -d' ' -f1)"
   echo "cpu_modelo=$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2- | sed 's/^ //')"
   echo "avx512_vnni=$(grep -qw avx512_vnni /proc/cpuinfo && echo si || echo NO)"
@@ -56,24 +63,36 @@ AN() { python3 "$AQUI/analiza.py" "$@" "$SALIDA"; }
 for serie in $SERIES; do
   case "$serie" in
     CORTA) cond corta_A_p1 --serie A --p 1 ;;
-    A) for r in $(seq 0 $((REPS-1))); do for p in $(rotar $r 1 2 4 8); do cond "A_p${p}_r$r" --serie A --p "$p"; done; done ;;
+    A) for r in $(seq 0 $((REPS-1))); do for p in $(rotar $r $PA_LISTA); do cond "A_p${p}_r$r" --serie A --p "$p"; done; done ;;
     B) P=$(python3 "$AQUI/analiza.py" mejor-p "$SALIDA"); [ -n "$P" ] || { log "ERROR: sin mejor P (¿corrió A?)"; exit 6; }
        log "mejor P = $P"
        for r in $(seq 0 $((REPS-1))); do for s in $(rotar $r compartida por_hilo); do cond "B_p${P}_${s}_r$r" --serie B --p "$P" --sesiones "$s"; done; done ;;
     C) P=$(python3 "$AQUI/analiza.py" mejor-p "$SALIDA"); S=$(python3 "$AQUI/analiza.py" mejor-sesion "$SALIDA" "$P")
        log "mejor P = $P, sesión = $S"
        for r in $(seq 0 $((REPS-1))); do for n in $(rotar $r 25 50 100); do cond "C_p${P}_${S}_sil${n}_r$r" --serie C --p "$P" --sesiones "$S" --silero-llamadas "$n"; done; done ;;
-    D) P=$(python3 "$AQUI/analiza.py" mejor-p "$SALIDA"); S=$(python3 "$AQUI/analiza.py" mejor-sesion "$SALIDA" "$P")
+    D) if [ -z "$PD_LISTA" ]; then   # como antes: P = 1 y el mejor P, con la mejor sesión para el mejor P
+       P=$(python3 "$AQUI/analiza.py" mejor-p "$SALIDA"); S=$(python3 "$AQUI/analiza.py" mejor-sesion "$SALIDA" "$P")
        for pd in 1 "$P"; do
          cap=$(python3 "$AQUI/analiza.py" capacidad "$SALIDA" "$pd"); [ -n "$cap" ] || { log "ERROR: sin capacidad para P=$pd"; exit 6; }
          ses=$([ "$pd" = "$P" ] && echo "$S" || echo compartida)
          log "serie D con P = $pd ($ses), capacidad medida en A = $cap/s"
-         for r in $(seq 0 $((REPS-1))); do for fr in $(rotar $r 0.5 0.75 0.9 1.0); do
+         for r in $(seq 0 $((REPS-1))); do for fr in $(rotar $r $FRACS); do
            tasa=$(python3 -c "print(round($cap*$fr,3))")
            cond "D_p${pd}_f${fr}_r$r" --serie D --p "$pd" --sesiones "$ses" --tasa "$tasa"
          done; done
          [ "$pd" = "$P" ] && break
-       done ;;
+       done
+       else                              # lista de P, sesión compartida; P y fracciones rotan entre repeticiones
+       declare -A CAP
+       for pd in $PD_LISTA; do
+         CAP[$pd]=$(python3 "$AQUI/analiza.py" capacidad "$SALIDA" "$pd"); [ -n "${CAP[$pd]}" ] || { log "ERROR: sin capacidad para P=$pd (¿está en PA_LISTA?)"; exit 6; }
+         log "serie D: P = $pd, capacidad medida en A de esta corrida = ${CAP[$pd]}/s"
+       done
+       for r in $(seq 0 $((REPS-1))); do for pd in $(rotar $r $PD_LISTA); do for fr in $(rotar $r $FRACS); do
+         tasa=$(python3 -c "print(round(${CAP[$pd]}*$fr,3))")
+         cond "D_p${pd}_f${fr}_r$r" --serie D --p "$pd" --sesiones compartida --tasa "$tasa"
+       done; done; done
+       fi ;;
     *) log "serie desconocida: $serie"; exit 2 ;;
   esac
 done
