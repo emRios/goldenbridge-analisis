@@ -1,0 +1,8 @@
+.env.mocks
+config/
+noche.log
+__pycache__/
+noche_escaleras.log
+noche.lock
+resultados/*/auditoria/*/cycle_probe.tsv
+resultados/*/veredicto_control_*.json

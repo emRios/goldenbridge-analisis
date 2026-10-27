@@ -1,0 +1,36 @@
+# manifiesto — 2026-10-27_m1s-smartturn-int8-fp32-mocks — 20261027T011336Z
+fecha_utc=20261027T011336Z
+host=ip-172-31-7-92
+forzado=0
+sesiones_activas_al_inicio=sin-servicio
+
+## este repo
+repo_commit=8d202875e64bda67fb16fe515d58bf3fe5abc37a
+repo_rama=paso/m1-linea-base
+repo_sucio=si
+
+## GoldenBridge
+gb_dir=/srv/GoldenBridge
+gb_commit=7b68e3ef5910b0af4ddddca2497cf759828aa170
+gb_rama=release/remarcacion-v1-jef-fp32
+gb_sucio=si
+gb_config=/home/eraxiom/goldenbridge-analisis/experimentos/2026-10-27_m1s-smartturn-int8-fp32-mocks/config/m1_mocks_base.yaml
+gb_config_sha256=698c7c303501ffcacd031543d8102d72e955903a85e027e67cbd51f2658e03d0
+gb_imagen=goldenbridge:remarcacion-v1-jef-fp32
+gb_imagen_id=sha256:8485ac9f48d033822443333d6c333d8c259b0bedc2e6237da75e653bf67f47af
+
+## máquina
+kernel=6.8.0-1066-aws
+cpu_modelo=Intel(R) Xeon(R) Platinum 8488C
+cpu_logicas=16
+cpu_disponibles=16
+avx512_vnni=si
+mem_total_kb=32311204
+loadavg_inicio=0.17 0.05 0.01
+
+## entorno de hilos (deben ser 1 en GoldenBridge)
+GB_ORT_INTRA_OP=<no definida en este shell>
+OMP_NUM_THREADS=<no definida en este shell>
+OPENBLAS_NUM_THREADS=<no definida en este shell>
+estado_salida=0
+loadavg_fin=3.88 3.06 1.48

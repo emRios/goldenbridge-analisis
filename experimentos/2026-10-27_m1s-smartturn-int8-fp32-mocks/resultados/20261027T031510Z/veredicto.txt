@@ -1,0 +1,3 @@
+repeticiones=1 escalones=[50, 75, 100]
+K60 (mayor N sano en todas las repeticiones, con todos los menores sanos) = ninguno
+rodilla60 (primer N con cycle_p90 med > 2x el de la base) = rep 1: N=75

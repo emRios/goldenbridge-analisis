@@ -1,0 +1,4 @@
+[20261027T011336Z r1_n100] cierres/s=7.35 intentos/s=14.01 intentos/cierre=1.69 infer_ms p50=851.7 p90=879.9 min=818.2 ttfab_p50=4818.0 ping_ctrl_p99=8.0 cpu_med=3.21
+  validez: valido=si muertes=0.0 gen_lag=2.0 errores_gb=0.0 cliente_rc=0.0
+  integración: router=0.0 amd=0.0 not_available=0.0 ttft_n=2227.0 finalize_con_texto=2228.0 | TTS espera total p50/p90=57.0/63.0 (n=2226.0); primer chunk del mock p50/p90=55.0/62.0 (n=3635.0)
+SATURADO: firma del techo presente a 100. Las 4 escaleras pueden correr (la meseta la dan ellas).

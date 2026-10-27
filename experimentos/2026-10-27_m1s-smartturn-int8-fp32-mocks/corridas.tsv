@@ -1,0 +1,6 @@
+sello	etiqueta	modelo	escalera	estable_s	rc	secuencia
+20261027T011336Z	control_corto	smart-turn-v3.2-gpu.onnx	100	300	0	20261027T011336Z_control
+20261027T012224Z	C_sube	smart-turn-v3.2-gpu.onnx	50 75 100	600	0	20261027T012224Z_escaleras
+20261027T015959Z	V_sube	smart-turn-v3.2-cpu.onnx	50 75 100	600	0	20261027T012224Z_escaleras
+20261027T023736Z	C_baja	smart-turn-v3.2-gpu.onnx	100 75 50	600	0	20261027T012224Z_escaleras
+20261027T031510Z	V_baja	smart-turn-v3.2-cpu.onnx	100 75 50	600	0	20261027T012224Z_escaleras

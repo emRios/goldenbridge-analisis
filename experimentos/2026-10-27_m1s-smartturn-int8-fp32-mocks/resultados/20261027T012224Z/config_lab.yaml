@@ -1,0 +1,305 @@
+backend: gotenks
+server:
+  host: 127.0.0.1
+  port: 8765
+  max_sessions: 120
+  cycle_probe: true
+  max_history_messages: 30
+  max_audio_buffer_bytes: 160000
+  tts_concurrency_limit: 50
+  idle_session_timeout_secs: 120
+  pre_context_seconds: 3.0
+  post_tts_silence_ms: 300
+  post_tts_transcript_grace_ms: 500
+  terminal_on_exit_grace_ms: 1000
+  stt_fallback_max_secs: 12.0
+  stt_fallback_preroll_secs: 1.0
+  max_no_interaction_secs: 90
+  no_interaction_farewell: No logro escucharle. Intentaré comunicarme en otro momento,
+    buen día.
+  no_audio_eviction_secs: 60
+  transition_latency:
+    enabled: true
+    pipeline_enabled: true
+    filler_enabled: true
+    filler_phrases:
+    - Un momento, por favor.
+    - Permítame un segundo.
+    - Claro, déjeme ver.
+    max_filler_plays: 2
+    streaming_filler_after_ms: 1200  
+intent_routers:
+  gotenks:
+    enabled: true
+    model: Qwen/Qwen3.5-9B
+    temperature: 0.0
+    max_tokens: 250
+    timeout_secs: 3.0
+    modifier_max_chars: 1500
+    agent_msg_max_chars: 300
+  cortex_heavy:
+    enabled: false
+    bundle_dir: null
+    onnx_dir: null
+    threshold: 0.4
+    margin: 0.2
+  cortex_lite:
+    enabled: false
+    threshold: 0.4
+    margin: 0.2
+audio:
+  input:
+    encoding: linear16
+    sample_rate: 8000
+  output:
+    encoding: linear16
+    sample_rate: 8000
+vad:
+  provider: silero
+  start_secs: 0.2
+  stop_secs: 0.2
+  threshold: 0.5
+  sample_rate: 8000
+  use_smart_turn: true
+  barge_in_min_consecutive_speech_chunks: 3
+  inference_workers: 12
+smart_turn:
+  threshold: 0.35
+  model_path: /app/smart-turn/smart-turn-v3.2-gpu.onnx
+  fallback_timeout_secs: 0.5
+  post_tts_threshold: 0.3
+  post_tts_duration_secs: 3.0
+  midspeech_check_every_n_chunks: 17
+barge_in:
+  enabled: true
+  min_speech_duration: 0.6
+  tts_vad_threshold: 0.9
+  min_energy_threshold: 0.08
+  min_tts_time: 1.2
+  min_consecutive_speech_chunks: 8
+  min_consecutive_silence_chunks: 3
+  silence_reset_min_speech_chunks: 3
+noise_reduction:
+  enabled: true
+  stationary: true
+  threshold_stationary: 1.5
+  threshold_nonstationary: 2.0
+emotion_detection:
+  enabled: false
+  volume_threshold_high: 0.5
+  volume_threshold_low: 0.2
+  pitch_variance_threshold_high: 5000.0
+  pitch_variance_threshold_mid: 3000.0
+  speaking_rate_threshold_low: 0.01
+stt:
+  provider: steno
+  language: es
+  sample_rate: 16000
+  auto_flush_secs: 2.0
+  base_url: ws://localhost:8080
+  api_key: ''
+  model: nova-2
+  barge_in_flush:
+    enabled: true
+    max_secs: 3.0
+  gotenks_url: ws://127.0.0.1:18081/v1/listen
+llm:
+  provider: gotenks
+  model: Qwen/Qwen3.5-9B
+  temperature: 0.4
+  max_tokens: 400
+  gotenks_url: http://127.0.0.1:18082/v1
+  system_prompt: 'Eres un asistente de voz útil y profesional.
+
+    Responde de forma concisa y natural, en 1-2 oraciones máximo.
+
+    Solo responde el texto para convertir a audio. No uses markdown ni formato.
+
+    '
+router:
+  enabled: true
+  model: Qwen/Qwen3.5-9B
+  temperature: 0.0
+  max_tokens: 250
+  modifier_max_chars: 1500
+  agent_msg_max_chars: 300
+  output_mode: json
+  letters_min_confidence: 0.5
+tts:
+  pacing:
+    initial_burst_secs: 1.5
+    enabled: true
+    lead_secs: 0.8
+    max_chunk_ms: 200
+  remote:
+    mode: ursula_ws
+    ursula:
+      base_url: http://127.0.0.1:9/disabled
+      gotenks_base_url: http://127.0.0.1:18083
+      voice_id: ''
+      voice_name: Jocelyn
+      speed: 1.0
+      language: Spanish
+      engine: kdvoz
+      style: ''
+    timeout: 30.0
+    retry_attempts: 2
+  background_audio:
+    enabled: false
+    file_path: ./A_busy_modern_office_normalized.wav
+    volume: 0.1
+    crossfade_ms: 50
+greeting:
+  first_message_mode: assistant-waits-for-user
+  first_message: ''
+  first_message_delay_ms: 500
+  precomputed_greetings: []
+silence_prompting:
+  enabled: false
+  timeout_secs: 10.0
+  max_prompts: 2
+  prompt_interval_secs: 10.0
+  prompts: []
+streaming:
+  buffer_strategy: clause
+  min_clause_chars: 20
+  first_chunk_aggressive: true
+  first_chunk_min_chars: 5
+  clause_delimiters:
+  - ','
+  - ;
+  - ':'
+  - ' —'
+  - ' -'
+scaling:
+  enabled: false
+  check_interval_secs: 20
+  idle_shutdown_secs: 1200
+  startup_timeout_secs: 120
+  cooldown_secs: 60
+  max_extra_workers: 1
+  endpoints:
+    steno_stt:
+      endpoint_id: 55dbxjewodrcxs
+      sessions_per_worker: 6
+      max_workers: 10
+    ursula_tts:
+      endpoint_id: lex8gvxzto4po5
+      sessions_per_worker: 4
+      max_workers: 15
+  gotenks:
+    modal_app_name: gotenks-hybrid
+    default_warmup_n: 1
+    stt_health_url: http://127.0.0.1:18081/health
+    tts_health_url: http://127.0.0.1:18083/health
+    llm_health_url: http://127.0.0.1:18082/health
+call_summary:
+  enabled: true
+  coalesce_secs: 0.4
+  ack_timeout_secs: 1.5
+amd:
+  enabled: true
+  use_llm: true
+  model: Qwen/Qwen3.5-9B
+  timeout_secs: 2.0
+  max_tokens: 8
+  max_turns: 3
+  window_secs: 35.0
+  phrase_window_secs: 120.0
+  phrase_max_turns: 8
+  max_words_human: 2
+  event_type: ANSWERING_MACHINE
+  priority: high
+  notes: Contestadora/buzón de voz detectado (AMD) — llamada finalizada
+  human_openers:
+  - alo
+  - bueno
+  - diga
+  - digame
+  - si
+  - hola
+  - buenas
+  - buenos dias
+  - buenas tardes
+  late_machine_phrases:
+  - buzon de voz
+  - correo de voz
+  - servicio de buzon
+  - casilla de voz
+  - despues del tono
+  - despues de la senal
+  - luego del tono
+  - marque la tecla numeral
+  - presionar numeral
+  - presione uno para grabar
+  - presione 1 para grabar
+  - presione 2 para escuchar
+  - excedido el tiempo maximo de grabacion
+  - please leave your message
+  - para grabar nuevamente
+  - borrar y grabar de nuevo
+  - grabe nuevamente su mensaje
+  late_machine_phrases_paired:
+  - deje su mensaje
+  - grabe su mensaje
+  - para enviar el mensaje
+  - seguir las instrucciones
+  late_pair_corroborators:
+  - tono
+  - senal
+  - presione
+  - presiona
+  - numeral
+  - almohadilla
+  - grabar
+  - grabacion
+  machine_phrases:
+  - buzon de voz
+  - correo de voz
+  - servicio de buzon
+  - este es el servicio de buzon
+  - es el servicio de buzon
+  - indicio de buzon de voz
+  - inicio de buzon de voz
+  - buzon de correo
+  - se rindio al buzon
+  - se rendio al buzon
+  - se reenvio al buzon
+  - redirigido al buzon
+  - te ha redirigido al buzon
+  - tu llamada se
+  - deje su mensaje
+  - deja tu mensaje
+  - grabe su mensaje
+  - graba tu mensaje
+  - despues del tono
+  - despues de la senal
+  - luego del tono
+  - marque la tecla numeral
+  - al finalizar marque la tecla numeral
+  - presionar numeral
+  - presione uno para grabar
+  - grabar nuevamente
+  - seguir las instrucciones
+  - tecla almohadilla
+  - pulse almohadilla
+  - cuando termine cuelgue
+  - cuando termine pulse almohadilla
+  - cuelga cuando hayas terminado
+  - puedes colgar cuando hayas terminado
+  - persona a quien llama no esta disponible
+  - persona con la que intento no esta disponible
+  - intentas comunicarte no esta disponible
+  - excedido el tiempo maximo de grabacion
+  - para enviar el mensaje
+  - cuelgue para
+  - no puede dejar un mensaje
+  - no podemos contestar tu llamada
+  - fuera de horario de atencion
+  - le devolveremos la llamada
+  - please leave your message
+  - leave a message after the tone
+  - not available
+logging:
+  level: INFO
+  format: json
