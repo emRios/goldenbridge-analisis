@@ -220,3 +220,47 @@ Espera total (fila + cálculo) al 100 % de la capacidad, mediana: 1 hilo 3.555 m
 
 `[INFERIDO]` P = 8 no escala porque las 8 vCPU del cpuset son 4 núcleos físicos (topología en `topologia_cpu.txt`):
 el `Run` ocupa el núcleo entero y dos hilos en el mismo núcleo se reparten su tiempo (cada `Run` pasa de 63 a 125 ms).
+
+## Serie D con P = 1, 2 y 4 (corrida `20261027T181344Z`)
+
+Encargo del 2026-10-27: medir P = 2, que la especificación del motor nuevo elige para K = 100 y que la serie D original
+no midió. Corrida `resultados/20261027T181344Z/` (manifiesto en esa carpeta), 18:13-19:13 UTC: serie A con P = 1, 2 y 4
+y serie D con P = 1, 2 y 4 a 0,5 · 0,75 · 0,8 · 0,9 × la capacidad medida en la serie A de la misma corrida; sesión
+compartida; 3 repeticiones con P y fracciones rotados; 10 s de calentamiento y 60 s medidos. 45 condiciones, todas válidas
+por paridad, reposo y lectura de vuelta `[MEDIDO]`. `run.sh` ganó `PA_LISTA`, `PD_LISTA` y `FRACS` (aprobado por el dueño).
+
+Capacidad de la serie A en esta corrida `[MEDIDO]`: P = 1 17,8/s · P = 2 34,5/s · P = 4 63,3/s (27-oct: 17,7 · 34,4 · 63,3).
+
+Espera + cálculo por pedido (media de las 3 repeticiones) y largo de la cola, muestreado cada 0,5 s `[MEDIDO]`:
+
+| P | carga | p50 | p90 | p99 | cola p50 / p90 / máx | caudal | capacidad usada |
+|---:|---:|---:|---:|---:|---|---:|---:|
+| 1 | 0,5 | 62 ms | 152 ms | 315 ms | 0 / 1 / 4 | 9,3/s | 52 % |
+| 1 | 0,75 | 114 ms | 256 ms | 497 ms | 0,3 / 3 / 9 | 13,7/s | 77 % |
+| 1 | 0,8 | 142 ms | 340 ms | 574 ms | 1 / 4,7 / 11 | 14,5/s | 81 % |
+| 1 | 0,9 | 308 ms | 1.156 ms | 1.379 ms | 3,7 / 19 / 26 | 16,3/s | 91 % |
+| 2 | 0,5 | 59 ms | 97 ms | 178 ms | 0 / 1 / 3 | 17,3/s | 50 % |
+| 2 | 0,75 | 75 ms | 161 ms | 241 ms | 0 / 3 / 6 | 24,9/s | 72 % |
+| 2 | 0,8 | 85 ms | 179 ms | 277 ms | 0 / 4 / 8 | 26,6/s | 77 % |
+| 2 | 0,9 | 123 ms | 331 ms | 713 ms | 2 / 8 / 25 | 29,9/s | 87 % |
+| 4 | 0,5 | 62 ms | 78 ms | 112 ms | 0 / 0 / 3 | 30,0/s | 47 % |
+| 4 | 0,75 | 64 ms | 116 ms | 162 ms | 0 / 2 / 6 | 45,7/s | 72 % |
+| 4 | 0,8 | 68 ms | 128 ms | 186 ms | 0 / 3 / 9 | 48,6/s | 77 % |
+| 4 | 0,9 | 92 ms | 181 ms | 268 ms | 1 / 7,3 / 18 | 54,7/s | 86 % |
+
+"Capacidad usada" = caudal atendido ÷ capacidad de la serie A. Con P = 2 y 4 queda ~3-4 puntos por debajo de la carga
+pedida: el generador de llegadas al azar entregó algo menos de lo pedido.
+
+Criterios preregistrados `[MEDIDO]`:
+
+| P | mayor carga con p90 ≤ 100 ms | mayor carga con p90 ≤ 200 ms |
+|---:|---:|---:|
+| 1 | ninguna (0,5 ya da 152 ms) | 0,5 |
+| 2 | 0,5 | 0,8 |
+| 4 | 0,5 | 0,9 |
+
+Contraste con la simulación de cola, P = 2 al 90 %: medido p50 123 ms y p90 331 ms, contra ~140 y ~370 deducidos.
+La medición queda **por debajo** de la simulación: 17 ms (12 %) en la mediana y 39 ms (11 %) en el p90.
+
+Nota `[MEDIDO]`: P = 1 al 90 % dio p50 308 ms en esta corrida y 3.555/827 ms (100 %/90 %) el 27-oct. Cerca del techo, con
+P = 1 la espera varía mucho entre corridas; las cifras con P = 2 y 4 son estables entre repeticiones.
